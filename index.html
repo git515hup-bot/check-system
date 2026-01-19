@@ -1,125 +1,134 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">تسجيل الدخول | شبكة النور 5G</title>
+    <title id="p-title">تسجيل الدخول | شبكة النور</title>
     <style>
-        :root {
-            --primary: #0084ff;
-            --accent: #00f2ff;
-            --bg: #050a14;
-            --card: #111827;
-            --text: #ffffff;
-            --gray: #9ca3af;
-            --success: #10b981;
-        }
-
-        body {
-            margin: 0; background: var(--bg); color: var(--text);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            display: flex; justify-content: center; min-height: 100vh;
-        }
-
-        .app-container { width: 100%; max-width: 480px; padding: 15px; padding-bottom: 100px; }
-
-        /* شريط الحالة */
-        .status-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .glass-info {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px; border-radius: 15px; text-align: center;
-        }
-        .glass-info small { display: block; font-size: 10px; color: var(--accent); margin-bottom: 4px; }
+        :root { --primary: #0084ff; --accent: #00f2ff; --bg: #050a14; --card: #111827; --text: #fff; --gray: #9ca3af; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: sans-serif; display: flex; justify-content: center; }
+        .app { width: 100%; max-width: 450px; padding: 15px; padding-bottom: 100px; }
+        
+        /* شريط المعلومات */
+        .info-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .box { background: var(--card); padding: 10px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .box small { display: block; font-size: 10px; color: var(--accent); }
 
         /* الكرت الرئيسي */
-        .main-card {
-            background: var(--card); border-radius: 30px; padding: 25px 20px;
-            border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
-
-        .network-name { font-size: 28px; font-weight: 900; text-align: center; margin: 0; }
-        .network-name span { color: var(--accent); }
+        .card { background: var(--card); border-radius: 25px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .logo { text-align: center; margin-bottom: 20px; }
+        .logo h1 { margin: 0; font-size: 26px; }
+        .logo span { color: var(--accent); }
 
         /* المدخلات */
-        .input-wrapper { margin-top: 25px; }
-        input[type="text"] {
-            width: 100%; padding: 18px; border-radius: 15px; border: 2px solid #1f2937;
-            background: #0b111d; color: #fff; font-size: 22px; text-align: center;
-            outline: none; box-sizing: border-box; transition: 0.3s;
-        }
-        input[type="text"]:focus { border-color: var(--accent); }
+        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #1f2937; background: #0b111d; color: #fff; font-size: 20px; text-align: center; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-main { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; }
+        .btn-speed { background: rgba(0, 242, 255, 0.05); color: var(--accent); border: 1px solid var(--accent); }
 
-        /* خيار إيقاف التحديثات */
-        .toggle-container {
-            display: flex; align-items: center; justify-content: space-between;
-            background: rgba(255,255,255,0.03); padding: 12px 15px;
-            border-radius: 12px; margin: 15px 0; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .toggle-text { font-size: 12px; color: var(--gray); }
-        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #374151; transition: .4s; border-radius: 20px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px;
-            background-color: white; transition: .4s; border-radius: 50%;
-        }
-        input:checked + .slider { background-color: var(--success); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        /* الأزرار */
-        .btn {
-            width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: bold;
-            font-size: 16px; cursor: pointer; transition: 0.3s; margin-bottom: 10px;
-        }
-        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; }
-        .btn-speed { background: rgba(0, 242, 255, 0.05); color: var(--accent); border: 1px solid rgba(0,242,255,0.2); }
+        /* خيار التحديثات */
+        .opt { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; margin: 15px 0; font-size: 12px; }
 
         /* الأقسام */
-        .page-section { display: none; animation: fadeIn 0.3s ease; }
-        .page-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .sec { display: none; animation: f 0.3s; }
+        .active { display: block; }
+        @keyframes f { from { opacity: 0; } to { opacity: 1; } }
 
-        /* القوائم */
-        .price-item {
-            background: rgba(255,255,255,0.02); border-radius: 15px; padding: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 8px; border-right: 4px solid var(--primary);
-        }
-        .pos-card { background: #1f2937; padding: 12px; border-radius: 12px; margin-bottom: 8px; font-size: 13px; border-left: 3px solid var(--primary); }
+        /* الباقات والموزعين */
+        .item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-right: 3px solid var(--primary); }
+        .pos { background: #1f2937; padding: 10px; border-radius: 10px; margin-bottom: 5px; font-size: 13px; }
 
-        /* الفوتر */
-        .dev-footer { text-align: center; margin-top: 40px; padding: 20px; font-size: 13px; color: var(--gray); line-height: 1.6; }
-        .dev-footer b { color: #fff; }
+        /* التنقل */
+        .nav { position: fixed; bottom: 15px; left: 15px; right: 15px; background: #111827; display: flex; justify-content: space-around; padding: 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .n-btn { background: none; border: none; color: var(--gray); font-size: 12px; cursor: pointer; }
+        .n-active { color: var(--accent); font-weight: bold; }
 
-        /* شريط التنقل */
-        .bottom-nav {
-            position: fixed; bottom: 20px; left: 20px; right: 20px;
-            background: rgba(17, 24, 39, 0.96); backdrop-filter: blur(10px);
-            border-radius: 20px; display: flex; justify-content: space-around;
-            padding: 12px; border: 1px solid rgba(255,255,255,0.1); z-index: 1000;
-        }
-        .nav-btn { background: none; border: none; color: var(--gray); font-size: 11px; cursor: pointer; text-align: center; }
-        .nav-btn.active { color: var(--accent); font-weight: bold; }
-        .nav-btn i { font-size: 18px; display: block; margin-bottom: 3px; }
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: var(--gray); }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-
-    <div class="status-bar">
-        <div class="glass-info"><small>التاريخ</small><b id="liveDate">--/--</b></div>
-        <div class="glass-info"><small>الوقت</small><b id="liveClock">00:00:00</b></div>
+<div class="app">
+    <div class="info-bar">
+        <div class="box"><small>التاريخ</small><b id="d">--/--</b></div>
+        <div class="box"><small>الوقت</small><b id="t">00:00</b></div>
     </div>
 
-    <div id="loginPage" class="page-section active">
-        <div class="main-card">
-            <h1 class="network-name">النور نـت <span>5G</span></h1>
+    <div id="p1" class="sec active">
+        <div class="card">
+            <div class="logo"><h1>النور نـت <span>5G</span></h1></div>
             
             <form action="$(link-login-only)" method="post">
                 <input type="hidden" name="dst" value="$(link-orig)" />
                 <input type="hidden" name="popup" value="true" />
+                
+                <input type="text" name="username" value="$(username)" placeholder="أدخل كود الكرت" required>
+                <input type="hidden" name="password" value="">
+
+                <div class="opt">
+                    <span>🛡️ إيقاف التحديثات التلقائية</span>
+                    <input type="checkbox" checked>
+                </div>
+
+                <button type="submit" class="btn btn-main">دخول الآن</button>
+            </form>
+            <button class="btn btn-speed" onclick="alert('جاري تحديد أفضل سرعة لجهازك...')">⚙️ تحديد السرعة</button>
+            
+            $(if error)
+            <div style="color:#ff4d4d; text-align:center; font-size:12px; margin-top:10px;">$(error)</div>
+            $(endif)
+        </div>
+    </div>
+
+    <div id="p2" class="sec">
+        <h3 style="margin-right:10px;">📊 باقات الكروت</h3>
+        <div class="item"><span>باقة شهر (1G)</span><b>200 ريال</b></div>
+        <div class="item"><span>باقة شهر (4G)</span><b>500 ريال</b></div>
+        <div class="item"><span>باقة شهرين (8G)</span><b>1000 ريال</b></div>
+        <div class="item"><span>باقة شهرين (10G)</span><b>1500 ريال</b></div>
+        <div class="item"><span>باقة شهرين (17G)</span><b>2000 ريال</b></div>
+        <div class="item"><span>مفتوحه أيام (20G)</span><b>3000 ريال</b></div>
+        <div class="item"><span>مفتوحه أيام (30G)</span><b>4000 ريال</b></div>
+        <div class="item"><span>مفتوحه أيام (100G)</span><b>10000 ريال</b></div>
+        <div class="item" style="border-right-color:var(--success)"><span>شهر مفتوح (2MB)</span><b>9000 ريال</b></div>
+        <div class="item" style="border-right-color:var(--success)"><span>شهر مفتوح (8MB)</span><b>25000 ريال</b></div>
+    </div>
+
+    <div id="p3" class="sec">
+        <h3 style="margin-right:10px;">📍 أماكن البيع</h3>
+        <div class="pos">🏢 بقالة عبدالرحمان ملص - العنبه (وكيل)</div>
+        <div class="pos">🏢 بقالة باخريصة - سوق ثبي (وكيل)</div>
+        <div class="pos">🏢 المخطط الشرقي - بقالة صالح عبد</div>
+        <div class="pos">🏢 حافة الروضه - محلات النور للهواتف</div>
+        <div class="pos">🏢 بقالة بن حميدان - الريضة</div>
+        <div class="pos">🏢 البدع - محلات البدر للمواد الكهربائية</div>
+    </div>
+
+    <div class="footer">
+        م/ هداف ملص للتواصل 777382690
+    </div>
+
+    <div class="nav">
+        <button id="b1" class="n-btn n-active" onclick="go('p1','تسجيل الدخول', 'b1')">🏠<br>دخول</button>
+        <button id="b2" class="n-btn" onclick="go('p2','أسعار الكروت', 'b2')">💰<br>الأسعار</button>
+        <button id="b3" class="n-btn" onclick="go('p3','أماكن البيع', 'b3')">📍<br>الموزعين</button>
+    </div>
+</div>
+
+<script>
+    function go(pId, title, bId) {
+        document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.n-btn').forEach(b => b.classList.remove('n-active'));
+        document.getElementById(pId).classList.add('active');
+        document.getElementById(bId).classList.add('n-active');
+        document.getElementById('p-title').innerText = title + " | شبكة النور";
+    }
+
+    setInterval(() => {
+        const n = new Date();
+        document.getElementById('t').innerText = n.toLocaleTimeString('en-GB');
+        document.getElementById('d').innerText = n.toLocaleDateString('ar-YE', {day:'numeric', month:'short'});
+    }, 1000);
+</script>
+</body>
+</html>
