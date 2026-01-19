@@ -3,106 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل دخول | شبكة النور 5G</title>
+    <title>بوابة الدخول | شبكة النور 5G</title>
     <style>
-        :root { --primary: #1a73e8; --secondary: #34a853; --warning: #d93025; --bg: #f8f9fa; }
-        body { margin: 0; background: var(--bg); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        
-        .card-box { 
-            background: white; padding: 25px; border-radius: 25px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.08); 
-            width: 90%; max-width: 380px; text-align: center; border: 1px solid #eee;
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --success: #22c55e;
         }
 
-        .header { margin-bottom: 25px; }
-        .network-name { color: var(--primary); font-size: 28px; font-weight: 900; margin: 0; }
-        .5g-tag { background: var(--secondary); color: white; padding: 2px 10px; border-radius: 50px; font-size: 12px; vertical-align: middle; }
-
-        input[type="text"] { 
-            width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 15px; 
-            font-size: 22px; text-align: center; outline: none; transition: 0.3s; margin-bottom: 15px;
-            color: #333; font-weight: bold;
-        }
-        input[type="text"]:focus { border-color: var(--primary); background: #f1f7ff; }
-
-        .btn-connect { 
-            background: var(--primary); color: white; border: none; padding: 16px; 
-            width: 100%; border-radius: 15px; font-size: 18px; font-weight: bold; 
-            cursor: pointer; box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        /* تنسيق خيار إيقاف التحديثات */
-        .option-container {
-            display: flex; align-items: center; justify-content: center;
-            background: #fff8e1; padding: 10px; border-radius: 12px; margin-bottom: 15px;
-            border: 1px solid #ffe082; cursor: pointer;
-        }
-        .option-container input { margin-left: 10px; transform: scale(1.2); cursor: pointer; }
-        .option-text { font-size: 13px; color: #795548; font-weight: 600; }
-
-        .price-btn { 
-            background: none; color: var(--primary); border: 2px solid var(--primary); 
-            padding: 10px; width: 100%; border-radius: 12px; font-size: 14px; 
-            cursor: pointer; font-weight: bold; margin-top: 10px;
+        .main-container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .price-list { display: none; margin-top: 15px; background: #fafafa; border-radius: 12px; padding: 10px; border: 1px solid #eee; }
-        table { width: 100%; border-collapse: collapse; }
-        th { color: #888; font-size: 12px; padding: 10px; border-bottom: 2px solid #eee; }
-        td { padding: 12px 5px; border-bottom: 1px solid #f0f0f0; font-weight: bold; font-size: 14px; }
+        /* المربعات العلوية (الوقت والتاريخ) */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
 
-        .admin-warning { 
-            font-size: 11px; color: var(--warning); margin-top: 20px; 
-            padding: 10px; border-top: 1px dashed #ddd; line-height: 1.5;
+        .info-square {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 18px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .info-square span { display: block; }
+        .label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 5px; }
+        .value { font-size: 18px; font-weight: bold; color: var(--accent-color); }
+
+        /* كرت الدخول الرئيسي */
+        .login-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, #3b82f6, #22c55e);
+        }
+
+        .logo-area { margin-bottom: 25px; text-align: center; }
+        .logo-area h1 { margin: 0; font-size: 28px; letter-spacing: 1px; }
+        .logo-area .tag { font-size: 12px; color: var(--success); font-weight: bold; }
+
+        input[type="text"] {
+            width: 100%;
+            background: #0f172a;
+            border: 2px solid #334155;
+            padding: 18px;
+            border-radius: 15px;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]:focus { border-color: var(--accent-color); box-shadow: 0 0 15px rgba(59,130,246,0.3); }
+
+        .btn-connect {
+            width: 100%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-connect:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.4); }
+
+        /* خيار إيقاف التحديثات بنمط عصري */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.03);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .toggle-text { font-size: 13px; color: var(--text-secondary); }
+
+        .price-link {
+            display: block;
+            margin-top: 15px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .footer-warning {
+            font-size: 11px;
+            color: #ef4444;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 
-<div class="card-box">
-    <div class="header">
-        <h1 class="network-name">النور <span class="5g-tag">5G</span></h1>
-        <p style="color: #666; font-size: 12px; margin-top: 5px;">أهلاً بك في أسرع شبكة في المنطقة</p>
+<div class="main-container">
+    <div class="info-grid">
+        <div class="info-square">
+            <span class="label">📅 تاريخ اليوم</span>
+            <span class="value" id="date">--/--</span>
+        </div>
+        <div class="info-square">
+            <span class="label">⏰ الوقت الآن</span>
+            <span class="value" id="time">00:00</span>
+        </div>
     </div>
 
-    <form action="/login" method="post">
-        <input type="text" name="username" placeholder="رقم الكرت" required>
-        <input type="hidden" name="password" value="">
+    <div class="login-card">
+        <div class="logo-area">
+            <h1>النور <span style="color:var(--accent-color)">5G</span></h1>
+            <span class="tag">NETWORK STATUS: ONLINE</span>
+        </div>
 
-        <label class="option-container">
-            <input type="checkbox" name="stop_updates" checked>
-            <span class="option-text">إيقاف التحديثات التلقائية لتوفير الرصيد ⏳</span>
-        </label>
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="أدخل كود الكرت" required>
+            
+            <div class="toggle-container">
+                <span class="toggle-text">توفير البيانات (إيقاف التحديثات)</span>
+                <input type="checkbox" checked>
+            </div>
 
-        <button type="submit" class="btn-connect">تفعيل الكرت الآن</button>
-    </form>
+            <button type="submit" class="btn-connect">اتصال الآن</button>
+        </form>
 
-    <button class="price-btn" onclick="togglePrices()">📊 عرض باقات الشبكة</button>
+        <div class="price-link" onclick="alert('أرسل لي الأسعار لأضعها هنا!')">📊 عرض خطط الأسعار</div>
 
-    <div class="price-list" id="priceList">
-        <table>
-            <thead>
-                <tr>
-                    <th>الباقة</th>
-                    <th>السعر</th>
-                    <th>المدة</th>
-                </tr>
-            </thead>
-            <tbody id="priceTableBody">
-                <tr><td colspan="3" style="color:#aaa; font-weight:normal;">بانتظار قائمة الأسعار...</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="admin-warning">
-        ⛔ <b>تنبيه الإدارة:</b> يمنع ربط أي مودم بدون إذن مسبق. <br>
-        النظام يقوم بفصل الخدمة تلقائياً عند اكتشاف أجهزة ربط مخالفة.
+        <div class="footer-warning">
+            ⚠️ تنبيه: يمنع ربط أجهزة توزيع إضافية دون إذن الإدارة.
+        </div>
     </div>
 </div>
 
 <script>
-    function togglePrices() {
-        var list = document.getElementById("priceList");
-        list.style.display = (list.style.display === "block") ? "none" : "block";
-    }
-</script
+    // تحديث الوقت والتاريخ لحظياً
+    function updateClock() {
+        const now = new Date();
+        
+        //
