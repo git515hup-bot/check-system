@@ -3,93 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة شبكة النور 5G | م/ هداف ملص</title>
+    <title>شبكة النور 5G | م/ هداف ملص</title>
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.1);
-            --accent: #00d2ff;
-            --secondary: #3a7bd5;
-            --text: #ffffff;
+            --primary: #007bff;
+            --accent: #00f2ff;
+            --bg: #0f172a;
+            --card: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
         }
 
         body {
             margin: 0;
-            padding: 0;
-            background: radial-gradient(circle at top right, #1e3c72, #2a5298, #000000);
-            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
             color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-image: radial-gradient(circle at top right, #1e3a8a, transparent);
             min-height: 100vh;
-            overflow-x: hidden;
+            padding-bottom: 80px;
         }
 
-        .container {
-            width: 90%;
-            max-width: 400px;
-            z-index: 10;
+        /* الهيدر العلوي */
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(15, 23, 42, 0.9);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
-        /* المربعات العلوية الحديثة */
-        .status-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 15px;
+        .network-title { font-size: 24px; font-weight: 900; color: var(--accent); margin: 0; }
+        .live-clock { font-size: 14px; color: #94a3b8; margin-top: 5px; }
+
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+
+        /* بطاقة حالة المستخدم */
+        .status-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .glass-box {
-            background: var(--glass);
+        .user-welcome { font-size: 18px; margin-bottom: 15px; }
+        .user-id { color: var(--accent); font-weight: bold; }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .stat-item { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; }
+        .stat-label { font-size: 11px; color: #94a3b8; display: block; }
+        .stat-val { font-size: 14px; font-weight: bold; color: #fff; }
+
+        /* الأقسام (مخفية افتراضياً) */
+        .page-section { display: none; animation: fadeIn 0.4s ease; }
+        .page-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* تصميم الكروت (الأسعار) */
+        .price-card {
+            background: white; color: #333;
+            border-radius: 15px; margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; border-right: 5px solid var(--primary);
+        }
+        .price-info h3 { margin: 0; font-size: 16px; }
+        .price-info p { margin: 2px 0; font-size: 12px; color: #666; }
+        .price-tag { background: #e0f2fe; color: var(--primary); padding: 5px 12px; border-radius: 8px; font-weight: bold; }
+
+        /* نقاط البيع */
+        .pos-item {
+            background: rgba(255,255,255,0.05); padding: 12px;
+            border-radius: 10px; margin-bottom: 8px; font-size: 14px;
+            display: flex; align-items: center;
+        }
+        .pos-item::before { content: "📍"; margin-left: 10px; }
+
+        /* شريط التنقل السفلي */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            display: flex; justify-content: space-around;
+            padding: 12px; border-top: 1px solid rgba(255,255,255,0.1);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 12px;
-            text-align: center;
+        }
+        .nav-item { background: none; border: none; color: #64748b; font-size: 12px; cursor: pointer; }
+        .nav-item.active { color: var(--accent); font-weight: bold; }
+
+        .btn-action {
+            width: 100%; padding: 15px; border-radius: 12px; border: none;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px;
         }
 
-        .box-label { font-size: 10px; color: #aaa; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .box-value { font-size: 16px; font-weight: 700; color: var(--accent); }
+        .footer { text-align: center; font-size: 11px; color: #475569; margin-top: 30px; line-height: 1.6; }
+        .dev-tag { color: var(--accent); font-weight: bold; text-decoration: none; }
+    </style>
+</head>
+<body>
 
-        /* كرت الدخول الرئيسي */
-        .main-card {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 35px 25px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            text-align: center;
-        }
+    <div class="header">
+        <h1 class="network-title">النور نـت 5G</h1>
+        <div class="live-clock" id="clock">00:00:00 - --/--</div>
+    </div>
 
-        .header h1 { font-size: 32px; margin: 0; font-weight: 900; background: linear-gradient(to right, #00d2ff, #91eaff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header p { font-size: 12px; color: #888; margin-top: 5px; letter-spacing: 2px; }
+    <div class="container">
+        
+        <div id="home" class="page-section active">
+            <div class="status-card">
+                <div class="user-welcome">مرحباً بك: <span class="user-id">hdaf**</span></div>
+                <div class="stat-item" style="background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e;">
+                    <span class="stat-label" style="color:#22c55e">حالة الاتصال</span>
+                    <span class="stat-val">متصل الآن - سرعة عالية 5G</span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">المتبقي</span>
+                        <span class="stat-val">4.29 GB</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">الوقت المتبقي</span>
+                        <span class="stat-val">23 يوم</span>
+                    </div>
+                </div>
+                <button class="btn-action">فتح كاميرا المسح 📷</button>
+            </div>
+            
+            <div class="status-card" style="text-align: right; font-size: 13px;">
+                <h4 style="margin:0 0 10px 0; color:var(--accent);">⚠️ تنبيهات هامة:</h4>
+                • يمنع ربط أي مودم بدون إذن الإدارة.<br>
+                • حافظ على رصيدك بإيقاف التحديثات التلقائية.
+            </div>
+        </div>
 
-        form { margin-top: 30px; }
+        <div id="prices" class="page-section">
+            <h2 style="font-size: 18px; margin-bottom: 15px;">📊 باقات الإنترنت:</h2>
+            <div class="price-card">
+                <div class="price-info"><h3>باقة شهر (اقتصادية)</h3><p>1 جيجا | 20 ساعة | 60 ميجا</p></div>
+                <div class="price-tag">200 ر.ي</div>
+            </div>
+            <div class="price-card">
+                <div class="price-info"><h3>باقة شهر (متوسطة)</h3><p>4 جيجا | 720 ساعة | 60 ميجا</p></div>
+                <div class="price-tag">500 ر.ي</div>
+            </div>
+            <div class="price-card">
+                <div class="price-info"><h3>باقة مفتوحة (ذهبية)</h3><p>100 جيجا | 720 ساعة | 100 ميجا</p></div>
+                <div class="price-tag">10,000 ر.ي</div>
+            </div>
+        </div>
 
-        input[type="text"] {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 15px;
-            color: white;
-            font-size: 18px;
-            text-align: center;
-            outline: none;
-            transition: 0.3s;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-        }
+        <div id="pos" class="page-section">
+            <h2 style="font-size: 18px; margin-bottom: 15px;">📍 أماكن البيع المعتمدة:</h2>
+            <div class="pos-item">بقالة عبدالرحمن ملص - العنبة</div>
+            <div class="pos-item">بقالة باخريصة - سوق ثبي</div>
+            <div class="pos-item">بقالة صالح عبد - المخطط الشرقي</div>
+            <div class="pos-item">محلات النور للهواتف - حافة الروضة</div>
+        </div>
 
-        input[type="text"]:focus { border-color: var(--accent); background: rgba(255,255,255,0.1); }
+        <div class="footer">
+            برمجة وتطوير:<br>
+            <span style="font-size:14px; color:#fff;">م/ هداف ملص</span><br>
+            للتواصل والدعم: <a href="tel:777382690" class="dev-tag">777382690</a>
+        </div>
+    </div>
 
-        /* مفتاح إيقاف التحديثات */
-        .toggle-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.3);
-            padding: 10px 15px;
-            border-radius: 12px;
+    <nav class="nav-bar">
+        <button class="nav-item active" onclick="showSection('home', this)">🏠<br>الرئيسية</button>
+        <button class="nav-item" onclick="showSection('prices', this)">💰<br>الباقات</button>
+        <button class="nav-item" onclick="showSection('pos', this)">📍<br>نقاط البيع</button>
+    </nav>
+
+    <script>
+        // تبديل الأقسام
+        function showSection(id, btn) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active
