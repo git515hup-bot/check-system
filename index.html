@@ -3,158 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شبكة النور - تسجيل الدخول</title>
+    <title>شبكة النور اللاسلكية 5G</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Cairo', sans-serif; /* يفضل ربط خط Cairo من Google Fonts */
+            font-family: 'Cairo', sans-serif;
         }
 
         body {
-            /* خلفية فخمة تمزج بين النور والظلام */
-            background: radial-gradient(circle at center, #2c3e50 0%, #000000 100%);
+            background: #020b16; /* خلفية ليلية عميقة */
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-        }
-
-        /* إضافة تأثيرات ضوئية خلفية */
-        body::before {
-            content: "";
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 215, 0, 0.1);
-            filter: blur(100px);
-            border-radius: 50%;
-            top: 10%;
-            right: 10%;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 50px 30px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
             position: relative;
-            z-index: 1;
         }
 
-        .logo-area h1 {
-            color: #fff;
-            font-size: 2.5rem;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        /* دوائر الضوء الخلفية لتعزيز تأثير الزجاج */
+        .bg-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 198, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            top: -100px;
+            left: -100px;
+        }
+
+        .bg-glow-2 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            bottom: -150px;
+            right: -150px;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 40px 30px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            z-index: 10;
+        }
+
+        .badge-5g {
+            display: inline-block;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            color: #000;
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        h1 {
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 1.8rem;
             margin-bottom: 5px;
+            text-shadow: 0 2px 10px rgba(255,255,255,0.2);
         }
 
-        .logo-area p {
-            color: #ffd700;
+        .subtitle {
+            color: #00d2ff;
             font-size: 0.9rem;
-            letter-spacing: 2px;
             margin-bottom: 30px;
-            font-weight: bold;
+            font-weight: 600;
         }
 
-        .input-group {
-            margin-bottom: 25px;
+        .input-box {
+            position: relative;
+            margin-bottom: 20px;
         }
 
         input {
             width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
             color: #fff;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             text-align: center;
             outline: none;
-            transition: 0.4s;
+            transition: all 0.3s ease;
         }
 
         input:focus {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00d2ff;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
         }
 
-        button {
+        .btn-login {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #ffd700, #ffae00);
+            padding: 16px;
+            background: #ffffff;
             border: none;
-            border-radius: 15px;
-            color: #000;
-            font-weight: 800;
+            border-radius: 20px;
+            color: #020b16;
+            font-weight: 700;
             font-size: 1.1rem;
             cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
-            filter: brightness(1.1);
+        .btn-login:hover {
+            transform: scale(1.02);
+            background: #00d2ff;
+            color: white;
         }
 
-        .designer-credit {
-            margin-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        .credits {
+            margin-top: 35px;
             padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .designer-credit p {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.8rem;
-            margin-bottom: 5px;
+        .credits p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
         }
 
-        .designer-credit a {
+        .designer-name {
             color: #ffd700;
+            font-size: 1rem;
+            font-weight: 700;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
+            display: block;
+            margin-top: 5px;
         }
 
-        .whatsapp-link {
-            display: inline-block;
-            margin-top: 5px;
-            color: #25d366;
-            font-size: 0.8rem;
+        .phone-num {
+            color: #00d2ff;
             text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* حركة خفيفة للنصوص */
+        .fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="glass-card">
-        <div class="logo-area">
-            <h1>شبكة النور</h1>
-            <p>AL NOOR NETWORK</p>
-        </div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="glass-container fade-in">
+        <span class="badge-5g">HIGH SPEED</span>
+        <h1>شبكة النور اللاسلكية 5G</h1>
+        <p class="subtitle">استمتع بإنترنت فائق السرعة</p>
         
-        <form action="#">
-            <div class="input-group">
+        <form>
+            <div class="input-box">
                 <input type="text" placeholder="أدخل رمز الكرت" required>
             </div>
-            <button type="submit">اتصال بالإنترنت</button>
+            <button type="submit" class="btn-login">دخول الآن</button>
         </form>
 
-        <div class="designer-credit">
-            <p>تطوير وتصميم</p>
-            <a href="#">المصمم هداف ملص</a><br>
-            <a href="tel:777382680" class="whatsapp-link">📞 777382680</a>
+        <div class="credits">
+            <p>تم التصميم بواسطة</p>
+            <span class="designer-name">المصمم هداف ملص</span>
+            <a href="tel:777382680" class="phone-num">📱 777382680</a>
         </div>
     </div>
 
