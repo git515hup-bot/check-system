@@ -3,41 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول</title>
+    <title>شبكة النور اللاسلكية 5G</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: #010811; color: white; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 35px; padding: 40px 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-        .badge { background: #ffd700; color: #000; padding: 3px 15px; border-radius: 50px; font-weight: 900; font-size: 0.8rem; }
-        h1 { font-size: 1.8rem; margin: 15px 0; color: #fff; }
-        input { width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 15px; color: #fff; text-align: center; font-size: 1.3rem; margin-bottom: 15px; outline: none; }
-        .btn-main { width: 100%; padding: 15px; background: linear-gradient(45deg, #ffd700, #ffa500); border: none; border-radius: 15px; color: #000; font-weight: 900; cursor: pointer; font-size: 1.1rem; }
+
+        body {
+            background: #010811;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.15) 0%, transparent 80%);
+            color: white; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px;
+            padding: 30px 25px; width: 95%; max-width: 420px; text-align: center;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        .network-name { font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; color: #fff; text-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+        
+        .update-control {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px; padding: 12px 15px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid rgba(0, 210, 255, 0.1);
+        }
+        .update-control span { font-size: 0.8rem; font-weight: bold; color: #00d2ff; }
+        
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #ffd700; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        select {
+            width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;
+            color: #fff; margin-bottom: 20px; font-weight: bold; outline: none; font-size: 0.95rem; text-align: center;
+            cursor: pointer;
+        }
+        option { background: #010811; color: #fff; }
+
+        input[type="text"] {
+            width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 215, 0, 0.3); border-radius: 20px;
+            color: #ffd700; text-align: center; font-size: 2rem; outline: none;
+            transition: 0.3s; font-weight: 900; margin-bottom: 20px;
+        }
+        input[type="text"]:focus { border-color: #ffd700; background: rgba(0, 0, 0, 0.5); }
+
+        .btn-main {
+            width: 100%; padding: 16px; background: linear-gradient(45deg, #ffd700, #ffa500);
+            border: none; border-radius: 20px; color: #000; font-weight: 900; cursor: pointer; font-size: 1.4rem;
+        }
+
         .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
-        .btn-sub { background: rgba(255,255,255,0.1); color: #00d2ff; padding: 12px; border-radius: 15px; text-decoration: none; font-size: 0.9rem; font-weight: bold; border: 1px solid rgba(255,255,255,0.05); }
-        .footer-credit { margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
-        .designer-name { color: #ffd700; font-weight: 900; font-size: 1.1rem; display: block; margin-bottom: 5px; }
-        .designer-phone { color: #fff; font-size: 0.9rem; text-decoration: none; opacity: 0.8; }
+        .btn-sub { background: rgba(255,255,255,0.05); color: #fff; padding: 10px; border-radius: 12px; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.1); }
+
+        .footer-credit { margin-top: 35px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+        .designer-name { color: #ffd700; font-weight: 900; display: block; font-size: 1.15rem; margin-bottom: 5px; }
+        .designer-phone { color: #00d2ff; text-decoration: none; font-weight: bold; font-size: 0.95rem; }
     </style>
 </head>
 <body>
+
     <div class="glass-card">
-        <span class="badge">ULTRA SPEED 5G</span>
-        <h1>شبكة النور اللاسلكية  - 5G</h1>
-        <form action="#">
-            <input type="text" placeholder="أدخل رمز الكرت" required>
-            <button type="submit" class="btn-main">اتصال بالإنترنت</button>
+        <h1 class="network-name">شبكة النور اللاسلكية 5G</h1>
+        
+        <form name="login" action="$(link-login)" method="post" onsubmit="return handleLogin()">
+            <input type="hidden" name="dst" value="$(dst)" />
+            <input type="hidden" name="popup" value="false" />
+
+            <div class="update-control">
+                <span>🚫 إيقاف التحديثات التلقائية</span>
+                <label class="switch">
+                    <input type="checkbox" id="blockUpdates">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <select id="speedMode" name="domain">
+                <option value="Standard">🚀 الوضع التلقائي (الأسرع)</option>
+                <option value="100Mbps">🔥 سرعة فائقة (100 ميقا)</option>
+                <option value="70Mbps">⚡ سرعة عالية (70 ميقا)</option>
+                <option value="60Mbps">✨ سرعة توربو (60 ميقا)</option>
+                <option value="Gaming">🎮 وضع الألعاب (بينج منخفض)</option>
+                <option value="Streaming">🎥 وضع الأفلام واليوتيوب (4K)</option>
+                <option value="Social">📱 وضع السوشيال ميديا</option>
+                <option value="Saving">🔋 وضع توفير البيانات</option>
+            </select>
+
+            <input type="text" name="username" id="user" value="" autocomplete="off" required>
+            
+            <input type="hidden" name="password" id="pass">
+
+            <button type="submit" class="btn-main">تـسـجـيـل الـدخـول</button>
         </form>
+
         <div class="nav-grid">
-            <a href="prices.html" class="btn-sub">💰 أسعار الكروت</a>
-            <a href="stores.html" class="btn-sub">📍 أماكن البيع</a>
-            <a href="support.html" class="btn-sub" style="grid-column: span 2;">📞 الدعم الفني</a>
+            <a href="prices.html" class="btn-sub">💰 الباقات</a>
+            <a href="stores.html" class="btn-sub">📍 المواقع</a>
+            <a href="support.html" class="btn-sub" style="grid-column: span 2;">📞 الدعم الفني والمساعدة</a>
         </div>
+
         <div class="footer-credit">
-            <span style="font-size: 0.7rem; color: #aaa; display: block;">تصميم وتطوير</span>
+            <span style="font-size: 0.7rem; color: #777; display: block;">تصميم وتطوير</span>
             <span class="designer-name">م/ هداف ملص</span>
-            <a href="tel:777382680" class="designer-phone">📱 777382680</a>
+            <a href="tel:777382690" class="designer-phone">📱 777382690</a>
         </div>
     </div>
+
+    <script>
+        function handleLogin() {
+            var user = document.getElementById('user').value;
+            var block = document.getElementById('blockUpdates').checked;
+            document.getElementById('pass').value = user;
+
+            if(block) {
+                document.getElementById('speedMode').value = "NoUpdate";
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
