@@ -3,193 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شبكة النور اللاسلكية 5G</title>
+    <title>جدول باقات شبكة النور 5G</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
 
         body {
-            background: #020b16; /* خلفية ليلية عميقة */
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* دوائر الضوء الخلفية لتعزيز تأثير الزجاج */
-        .bg-glow {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(0, 198, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            top: -100px;
-            left: -100px;
-        }
-
-        .bg-glow-2 {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            bottom: -150px;
-            right: -150px;
-        }
-
-        .glass-container {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 40px 30px;
-            width: 90%;
-            max-width: 420px;
-            text-align: center;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
-            z-index: 10;
-        }
-
-        .badge-5g {
-            display: inline-block;
-            background: linear-gradient(90deg, #ffd700, #ff8c00);
-            color: #000;
-            padding: 2px 12px;
-            border-radius: 50px;
-            font-weight: 900;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-        }
-
-        h1 {
-            color: #ffffff;
-            font-weight: 900;
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-            text-shadow: 0 2px 10px rgba(255,255,255,0.2);
-        }
-
-        .subtitle {
-            color: #00d2ff;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-            font-weight: 600;
-        }
-
-        .input-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        input {
-            width: 100%;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            color: #fff;
-            font-size: 1.2rem;
-            text-align: center;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        input:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #00d2ff;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 16px;
-            background: #ffffff;
-            border: none;
-            border-radius: 20px;
-            color: #020b16;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .btn-login:hover {
-            transform: scale(1.02);
-            background: #00d2ff;
+            background: #020b16;
             color: white;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .credits {
-            margin-top: 35px;
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { color: #ffd700; font-size: 1.8rem; margin-bottom: 5px; }
+        .header p { color: #00d2ff; font-size: 0.9rem; }
+
+        .table-wrapper { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            min-width: 600px;
+        }
+
+        thead tr {
+            background: rgba(255, 215, 0, 0.1);
+            border-bottom: 2px solid #ffd700;
+        }
+
+        th { padding: 15px; color: #ffd700; font-weight: 700; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.95rem; }
+
+        tr:hover { background: rgba(255, 255, 255, 0.05); }
+
+        .price-tag { color: #fff; font-weight: 900; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 10px; }
+        .speed-tag { color: #00d2ff; font-weight: bold; }
+        .data-tag { color: #2ecc71; font-weight: bold; }
+
+        /* تمييز الباقات المفتوحة */
+        .unlimited-row { background: rgba(0, 210, 255, 0.05); }
+        .unlimited-text { color: #ff3e3e; font-weight: bold; }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
-
-        .credits p {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.75rem;
-        }
-
-        .designer-name {
-            color: #ffd700;
-            font-size: 1rem;
-            font-weight: 700;
-            text-decoration: none;
-            display: block;
-            margin-top: 5px;
-        }
-
-        .phone-num {
-            color: #00d2ff;
-            text-decoration: none;
-            font-size: 0.85rem;
+        .designer { color: #ffd700; text-decoration: none; font-weight: bold; display: block; margin-top: 5px; }
+        
+        .btn-back {
             display: inline-block;
-            margin-top: 8px;
-            letter-spacing: 1px;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: #fff;
+            color: #020b16;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: 0.3s;
         }
-
-        /* حركة خفيفة للنصوص */
-        .fade-in {
-            animation: fadeIn 1.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .btn-back:hover { background: #ffd700; transform: scale(1.05); }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
-    <div class="bg-glow-2"></div>
+    <div class="container">
+        <div class="header">
+            <h1>قائمة أسعار شبكة النور</h1>
+            <p>سرعة وثبات بـتقنية 5G الحديثة</p>
+        </div>
 
-    <div class="glass-container fade-in">
-        <span class="badge-5g">HIGH SPEED</span>
-        <h1>شبكة النور اللاسلكية 5G</h1>
-        <p class="subtitle">استمتع بإنترنت فائق السرعة</p>
-        
-        <form>
-            <div class="input-box">
-                <input type="text" placeholder="أدخل رمز الكرت" required>
-            </div>
-            <button type="submit" class="btn-login">دخول الآن</button>
-        </form>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>اسم الباقة</th>
+                        <th>السعر</th>
+                        <th>حجم البيانات</th>
+                        <th>مدة الوقت</th>
+                        <th>السرعة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>باقة شهر</td><td class="price-tag">200 ريال</td><td class="data-tag">1 جيجا</td><td>20 ساعة</td><td class="speed-tag">60 ميقا</td></tr>
+                    <tr><td>باقة شهر</td><td class="price-tag">500 ريال</td><td class="data-tag">4 جيجا</td><td>720 ساعة</td><td class="speed-tag">60 ميقا</td></tr>
+                    <tr><td>باقة شهرين</td><td class="price-tag">1000 ريال</td><td class="data-tag">8 جيجا</td><td>720 ساعة</td><td class="speed-tag">60 ميقا</td></tr>
+                    <tr><td>باقة شهرين</td><td class="price-tag">1500 ريال</td><td class="data-tag">10 جيجا</td><td>720 ساعة</td><td class="speed-tag">60 ميقا</td></tr>
+                    <tr><td>باقة شهرين</td><td class="price-tag">2000 ريال</td><td class="data-tag">17 جيجا</td><td>720 ساعة</td><td class="speed-tag">60 ميقا</td></tr>
+                    
+                    <tr><td>مفتوحة أيام</td><td class="price-tag">3000 ريال</td><td class="data-tag">20 جيجا</td><td>720 ساعة</td><td class="speed-tag">60 ميقا</td></tr>
+                    <tr><td>مفتوحة أيام</td><td class="price-tag">4000 ريال</td><td class="data-tag">30 جيجا</td><td>720 ساعة</td><td class="speed-tag">70 ميقا</td></tr>
+                    <tr><td>مفتوحة أيام</td><td class="price-tag">6000 ريال</td><td class="data-tag">50 جيجا</td><td>720 ساعة</td><td class="speed-tag">100 ميقا</td></tr>
+                    <tr><td>مفتوحة أيام</td><td class="price-tag">8000 ريال</td><td class="data-tag">70 جيجا</td><td>720 ساعة</td><td class="speed-tag">100 ميقا</td></tr>
+                    <tr style="background: rgba(255, 215, 0, 0.05);"><td>مفتوحة أيام</td><td class="price-tag">10000 ريال</td><td class="data-tag">100 جيجا</td><td>720 ساعة</td><td class="speed-tag">100 ميقا</td></tr>
 
-        <div class="credits">
-            <p>تم التصميم بواسطة</p>
-            <span class="designer-name">المصمم هداف ملص</span>
-            <a href="tel:777382680" class="phone-num">📱 777382680</a>
+                    <tr class="unlimited-row"><td>باقة شهر مفتوح</td><td class="price-tag">9000 ريال</td><td class="unlimited-text">مفتوح</td><td>شهر</td><td class="speed-tag">2 ميقا</td></tr>
+                    <tr class="unlimited-row"><td>باقة شهر مفتوح</td><td class="price-tag">15000 ريال</td><td class="unlimited-text">مفتوح</td><td>شهر</td><td class="speed-tag">4 ميقا</td></tr>
+                    <tr class="unlimited-row"><td>باقة شهر مفتوح</td><td class="price-tag">25000 ريال</td><td class="unlimited-text">مفتوح</td><td>شهر</td><td class="speed-tag">8 ميقا</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>لتجديد الاشتراك أو الاستفسار تواصل معنا</p>
+            <a href="tel:777382680" class="designer">المصمم هداف ملص | 777382680</a>
+            <a href="#" class="btn-back">العودة لتسجيل الدخول</a>
         </div>
     </div>
 
