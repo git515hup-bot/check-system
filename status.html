@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رصيدك - شبكة النور اللاسلكية 5G</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+
+        body {
+            background: #010811;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.2) 0%, transparent 80%);
+            color: white; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px; 
+            padding: 20px 20px 40px; /* تم تقليل التباعد العلوي هنا لرفع العنوان */
+            width: 100%; max-width: 400px; text-align: center;
+        }
+
+        /* تعديل العنوان ليكون مرتفعاً وأنيقاً */
+        .welcome-msg { 
+            color: #fff; 
+            font-size: 1.5rem; 
+            font-weight: 900; 
+            margin: 5px 0 25px 0; /* تقليل الهامش العلوي لرفع الكلمة */
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        /* دائرة الرصيد المتبقي */
+        .remaining-circle {
+            width: 190px; height: 190px; border-radius: 50%;
+            border: 8px solid rgba(255, 215, 0, 0.1);
+            border-top: 8px solid #ffd700;
+            margin: 0 auto 25px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+        }
+
+        .rem-label { font-size: 0.85rem; color: #00d2ff; font-weight: bold; }
+        .rem-value { font-size: 2.1rem; font-weight: 900; color: #fff; margin: 2px 0; }
+        .rem-unit { font-size: 0.75rem; color: #aaa; }
+
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px;
+        }
+        .info-item {
+            background: rgba(255, 255, 255, 0.03); border-radius: 15px; padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .info-label { display: block; font-size: 0.7rem; color: #888; margin-bottom: 5px; }
+        .info-value { display: block; font-size: 0.9rem; font-weight: bold; }
+
+        .btn-logout {
+            width: 100%; padding: 15px; background: rgba(255, 50, 50, 0.1);
+            border: 1px solid rgba(255, 50, 50, 0.3); border-radius: 18px;
+            color: #ff5555; font-weight: 900; cursor: pointer; text-decoration: none; display: block;
+            transition: 0.3s;
+        }
+        .btn-logout:hover { background: rgba(255, 50, 50, 0.25); }
+
+        .footer-credit { margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
+        .designer-name { color: #ffd700; font-weight: 900; display: block; font-size: 1.1rem; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="status-card">
+        <div class="welcome-msg">شبكة النور اللاسلكية 5G</div>
+
+        <div class="remaining-circle">
+            <span class="rem-label">الرصيد المتبقي</span>
+            <span class="rem-value">$(remain-bytes-total-nice)</span>
+            <span class="rem-unit">جيجابايت / ميجابايت</span>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">الوقت المتبقي</span>
+                <span class="info-value">$(remain-time)</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">رقم الكرت</span>
+                <span class="info-value">$(username)</span>
+            </div>
+        </div>
+
+        <form action="$(link-logout)" name="logout" onSubmit="return confirm('هل تريد تسجيل الخروج فعلاً؟')">
+            <button type="submit" class="btn-logout">تسجيل الخروج</button>
+        </form>
+
+        <div class="footer-credit">
+            <span style="font-size: 0.7rem; color: #666; display: block; margin-bottom: 2px;">تصميم وتنسيق</span>
+            <span class="designer-name">م/ هداف ملص</span>
+            <a href="tel:777382680" style="color:#00d2ff; text-decoration:none; font-size:0.9rem; font-weight: bold;">📱 777382680</a>
+        </div>
+    </div>
+
+</body>
+</html>
