@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شبكة النور 5G - هداف ملص</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: #010811; color: white; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 35px; padding: 40px 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .badge { background: #ffd700; color: #000; padding: 3px 15px; border-radius: 50px; font-weight: 900; font-size: 0.8rem; }
+        h1 { font-size: 1.8rem; margin: 15px 0; color: #fff; }
+        input { width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 15px; color: #fff; text-align: center; font-size: 1.3rem; margin-bottom: 15px; outline: none; }
+        .btn-main { width: 100%; padding: 15px; background: linear-gradient(45deg, #ffd700, #ffa500); border: none; border-radius: 15px; color: #000; font-weight: 900; cursor: pointer; font-size: 1.1rem; }
+        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
+        .btn-sub { background: rgba(255,255,255,0.1); color: #00d2ff; padding: 12px; border-radius: 15px; text-decoration: none; font-size: 0.9rem; font-weight: bold; border: 1px solid rgba(255,255,255,0.05); }
+        .footer-credit { margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .designer-name { color: #ffd700; font-weight: 900; font-size: 1.1rem; display: block; margin-bottom: 5px; }
+        .designer-phone { color: #fff; font-size: 0.9rem; text-decoration: none; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <span class="badge">ULTRA SPEED 5G</span>
+        <h1>شبكة النور اللاسلكية</h1>
+        <form action="#">
+            <input type="text" placeholder="أدخل رمز الكرت" required>
+            <button type="submit" class="btn-main">اتصال بالإنترنت</button>
+        </form>
+        <div class="nav-grid">
+            <a href="prices.html" class="btn-sub">💰 أسعار الكروت</a>
+            <a href="stores.html" class="btn-sub">📍 أماكن البيع</a>
+            <a href="support.html" class="btn-sub" style="grid-column: span 2;">📞 الدعم الفني</a>
+        </div>
+        <div class="footer-credit">
+            <span style="font-size: 0.7rem; color: #aaa; display: block;">تصميم وتطوير</span>
+            <span class="designer-name">م/ هداف ملص</span>
+            <a href="tel:777382680" class="designer-phone">📱 777382680</a>
+        </div>
+    </div>
+</body>
+</html>

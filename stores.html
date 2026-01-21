@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أماكن البيع - شبكة النور 5G</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+
+        body {
+            background: #010811;
+            color: white;
+            padding: 20px 10px;
+            min-height: 100vh;
+        }
+
+        .glass-box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 25px 15px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        h2 { color: #ffd700; text-align: center; margin-bottom: 5px; font-size: 1.6rem; }
+        .sub-title { color: #00d2ff; text-align: center; font-size: 0.9rem; margin-bottom: 25px; }
+
+        .store-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .store-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 15px;
+            border-right: 4px solid #ffd700;
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s;
+        }
+
+        .store-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(-5px);
+        }
+
+        .store-name {
+            font-weight: 700;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .store-location {
+            font-size: 0.85rem;
+            color: #00d2ff;
+            margin-top: 4px;
+        }
+
+        .agent-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 5px;
+            margin-top: 5px;
+            width: fit-content;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin: 25px 0 10px 0;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        /* حقوق المصمم */
+        .footer-credit {
+            margin-top: 30px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+        .designer-name { color: #ffd700; font-weight: 900; font-size: 1.1rem; display: block; }
+        .designer-phone { color: #fff; font-size: 1rem; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-box">
+        <a href="login.html" class="back-btn">⬅ العودة للرئيسية</a>
+        <h2>نقاط البيع المعتمدة</h2>
+        <p class="sub-title">اعثر على أقرب نقطة لك لشحن رصيدك</p>
+
+        <div class="store-list">
+            <div class="store-item">
+                <span class="store-name">بقالة عبدالرحمن ملص</span>
+                <span class="store-location">العنبه</span>
+               
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة باخريصة</span>
+                <span class="store-location">سوق ثبي</span>
+                
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة باخريصة</span>
+                <span class="store-location">العنبه</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">المخطط الشرقي - بقالة صالح عبد</span>
+                <span class="store-location">المخطط الشرقي</span>
+                
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">المخطط القبلي - بقالة خليفة</span>
+                <span class="store-location">المخطط القبلي</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة ابوسالم</span>
+                <span class="store-location">وسط ثبي</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة انور عبد الحق</span>
+                <span class="store-location">البقله</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة غازي باعديل</span>
+                <span class="store-location">وسط ثبي</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة العمودي عيديد</span>
+                <span class="store-location">حافة التوفيق</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">حصن فلوقة - بقالة سالم محفوظ التميمي</span>
+                <span class="store-location">حصن فلوقة</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">محلات النور للهواتف</span>
+                <span class="store-location">حافة الروضه - مقابل العمقي</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">مقهى فوزي بن حديه</span>
+                <span class="store-location">سوق ثبي</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة الجامع</span>
+                <span class="store-location">سوق ثبي</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">البدع - محلات البدر</span>
+                <span class="store-location">للمواد الكهربائية</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة الولي</span>
+                <span class="store-location">سوق ثبي</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة ابو بسام</span>
+                <span class="store-location">الريضة</span>
+            </div>
+
+            <div class="store-item">
+                <span class="store-name">بقالة الاخوين</span>
+                <span class="store-location">الريضة</span>
+            </div>
+        </div>
+
+        <div class="footer-credit">
+            <span style="font-size: 0.75rem; color: #aaa; display: block; margin-bottom: 5px;">تطوير وتنسيق</span>
+            <span class="designer-name">م/ هداف ملص</span>
+            <a href="tel:777382680" class="designer-phone">📱 777382680</a>
+        </div>
+    </div>
+
+</body>
+</html>
