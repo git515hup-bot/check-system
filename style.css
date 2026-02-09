@@ -1,0 +1,456 @@
+/* ============= الأنماط الأساسية ============= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background: #010811;
+    background-image: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.15) 0%, transparent 80%);
+    color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+    padding: 30px 25px;
+    width: 95%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+}
+
+/* ============= الترويسة ============= */
+.network-name {
+    font-size: 1.2rem;
+    font-weight: 900;
+    margin-bottom: 5px;
+    color: #fff;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+.religious-note {
+    font-size: 0.75rem;
+    color: #ffd700;
+    margin-bottom: 20px;
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+/* ============= عناصر التحكم ============= */
+.update-control {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(0, 210, 255, 0.1);
+}
+
+.update-control span {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #00d2ff;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 22px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #ffd700;
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+/* ============= حقول الإدخال ============= */
+select {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    color: #fff;
+    margin-bottom: 20px;
+    font-weight: bold;
+    outline: none;
+    font-size: 0.95rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+option {
+    background: #010811;
+    color: #fff;
+}
+
+input[type="text"] {
+    width: 85%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 20px;
+    color: #ffd700;
+    text-align: center;
+    font-size: 1.5rem;
+    outline: none;
+    transition: 0.3s;
+    font-weight: 900;
+    margin: 0 auto 20px auto;
+    display: block;
+}
+
+input[type="text"]:focus {
+    border-color: #ffd700;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* ============= الأزرار ============= */
+.btn-main {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(45deg, #ffd700, #ffa500);
+    border: none;
+    border-radius: 20px;
+    color: #000;
+    font-weight: 900;
+    cursor: pointer;
+    font-size: 1.4rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-main:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+}
+
+.btn-main:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ============= السجل ============= */
+.history-box {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    border: 1px dashed rgba(255, 215, 0, 0.2);
+    display: none;
+}
+
+.history-label {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.cards-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
+
+.card-tag {
+    background: rgba(255, 215, 0, 0.1);
+    color: #ffd700;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.card-tag:hover {
+    background: rgba(255, 215, 0, 0.2);
+    transform: scale(1.05);
+}
+
+/* ============= رسائل الخطأ ============= */
+#error-msg {
+    background: rgba(255, 0, 0, 0.2);
+    color: #ff5555;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+    display: none;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* ============= شبكة التنقل ============= */
+.nav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.btn-sub {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.btn-sub:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+/* ============= التذييل ============= */
+.footer-credit {
+    margin-top: 35px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 15px;
+}
+
+.designer-name {
+    color: #ffd700;
+    font-weight: 900;
+    display: block;
+    font-size: 1.15rem;
+    margin-bottom: 5px;
+}
+
+.designer-phone {
+    color: #00d2ff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+/* ============= إعدادات السيرفر ============= */
+.server-settings {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 210, 255, 0.2);
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.server-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.server-header span {
+    font-weight: bold;
+    color: #00d2ff;
+    font-size: 0.9rem;
+}
+
+.btn-mini {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-mini:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.server-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.server-grid .input-group {
+    margin-bottom: 0;
+}
+
+.server-grid label {
+    display: block;
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.server-grid input {
+    width: 100%;
+    padding: 8px 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: white;
+    font-size: 0.85rem;
+}
+
+.btn-test {
+    grid-column: span 2;
+    background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-test:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
+}
+
+.btn-test:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-settings {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.85rem;
+}
+
+.btn-settings:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.btn-settings.active {
+    background: rgba(0, 210, 255, 0.1);
+    border-color: #00d2ff;
+    color: #00d2ff;
+}
+
+/* ============= صندوق الحالة ============= */
+.status-box {
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.status-box.success {
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    color: #00ff00;
+}
+
+.status-box.error {
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    color: #ff5555;
+}
+
+.status-box.info {
+    background: rgba(0, 210, 255, 0.1);
+    border: 1px solid rgba(0, 210, 255, 0.3);
+    color: #00d2ff;
+}
+
+.status-box .loading {
+    text-align: center;
+    padding: 5px;
+}
+
+/* ============= المؤشر الدوار ============= */
+.spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffd700;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
