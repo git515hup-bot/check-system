@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشاهدة البث المباشر | المشرف</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a12;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        .header {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .video-container {
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            border: 2px solid #00ff88;
+        }
+        
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .streams-list {
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .stream-item {
+            background: #16213e;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            transition: 0.3s;
+        }
+        
+        .stream-item:hover {
+            background: #00ff88;
+            color: #000;
+        }
+        
+        .stream-item.active {
+            background: #00ff88;
+            color: #000;
+            border: 2px solid #fff;
+        }
+        
+        .status {
+            color: #00ff88;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .no-streams {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>🎥 لوحة تحكم البث المباشر</h2>
+            <p class="status" id="status">🟢 جاهز - انتظار بثوث</p>
+        </div>
+        
+        <div class="video-container">
+            <video id="remoteVideo" autoplay playsinline></video>
+        </div>
+        
+        <div class="streams-list">
+            <h3>📡 البثوث النشطة:</h3>
+            <div id="streamsList">
+                <div class="no-streams">لا يوجد بثوث حالياً</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let peerConnection = null;
+        let currentStreamerId = null;
+        
+        const remoteVideo = document.getElementById('remoteVideo');
+        const streamsListDiv = document.getElementById('streamsList');
+        const statusSpan = document.getElementById('status');
+        
+        const configuration = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
+        };
+        
+        // تحديث قائمة البثوث
+        socket.on('stream-list', (streams) => {
+            if (streams.length === 0) {
+                streamsListDiv.innerHTML = '<div class="no-streams">لا يوجد بثوث حالياً</div>';
+                statusSpan.innerHTML = "🟡 في انتظار بثوث...";
+                return;
+            }
+            
+            streamsListDiv.innerHTML = streams.map(stream => `
+                <div class="stream-item" onclick="selectStream('${stream.socketId}')">
+                    <span>📹 بث مباشر</span>
+                    <span>👁️ ${stream.viewerCount} مشاهد</span>
+                </div>
+            `).join('');
+            
+            statusSpan.innerHTML = `🟢 يوجد ${streams.length} بث نشط`;
+            
+            // إذا كان هناك بث ولم يتم اختيار أي بث، اختر الأول تلقائياً
+            if (streams.length > 0 && !currentStreamerId) {
+                selectStream(streams[0].socketId);
+            }
+        });
+        
+        // اختيار بث للمشاهدة
+        window.selectStream = async (streamerId) => {
+            if (currentStreamerId === streamerId) return;
+            
+            // إغلاق الاتصال القديم
+            if (peerConnection) {
+                peerConnection.close();
+            }
+            
+            currentStreamerId = streamerId;
+            statusSpan.innerHTML = `📺 جاري الاتصال بالبث...`;
+            
+            // إنشاء اتصال جديد
+            peerConnection = new RTCPeerConnection(configuration);
+            
+            // معالجة المسارات البعيدة
+            peerConnection.ontrack = (event) => {
+                if (event.streams && event.streams[0]) {
+                    remoteVideo.srcObject = event.streams[0];
+                    statusSpan.innerHTML = `📺 بث مباشر - قيد المشاهدة ✅`;
+                }
+            };
+            
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    socket.emit('ice-candidate', {
+                        target: streamerId,
+                        candidate: event.candidate
+                    });
+                }
+            };
+            
+            // إعلام السيرفر بالمشاهدة
+            socket.emit('watch-stream', streamerId);
+            
+            // إنشاء Offer
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            
+            socket.emit('offer', {
+                target: streamerId,
+                sdp: peerConnection.localDescription
+            });
+        };
+        
+        // استقبال Offer (للمشرف)
+        socket.on('offer', async (data) => {
+            if (data.from !== currentStreamerId) return;
+            
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            
+            socket.emit('answer', {
+                target: data.from,
+                sdp: peerConnection.localDescription
+            });
+        });
+        
+        // استقبال ICE Candidates
+        socket.on('ice-candidate', async (data) => {
+            if (data.from !== currentStreamerId) return;
+            
+            if (peerConnection && data.candidate) {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+            }
+        });
+        
+        // انتهاء البث
+        socket.on('stream-ended', (streamerId) => {
+            if (currentStreamerId === streamerId) {
+                remoteVideo.srcObject = null;
+                currentStreamerId = null;
+                statusSpan.innerHTML = "🔴 انتهى البث - انتظار بث جديد";
+            }
+        });
+    </script>
+</body>
+</html>
